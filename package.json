@@ -1,0 +1,38 @@
+{
+  "name": "personal-blog",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "妄想龙王的世界 — 个人博客",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "postbuild": "node scripts/spa-404.mjs",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.5.0",
+    "@splinetool/react-spline": "4.1.0",
+    "@splinetool/runtime": "2.0.86",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.9.1",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "3.4.19",
+    "tailwindcss-animate": "1.0.7",
+    "typescript": "^5.9.3",
+    "vite": "8.3.4"
+  }
+}
