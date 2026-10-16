@@ -5,6 +5,8 @@
 export const SITE = {
   /** 站点名称 */
   name: "妄想龙王的世界",
+  /** 英文站名，用于导航栏等空间受限的地方 */
+  nameEn: "Delusion Dragon King",
   /** 英文别名 / GitHub 用户名 */
   handle: "blue-riband-x",
   /** 一句话简介 */

@@ -28,14 +28,14 @@ export default function BlogList() {
 
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* 左侧边栏：博主 + 标签云 */}
-          <aside className="order-2 space-y-8 lg:order-1 lg:col-span-3">
+          {/* 左侧边栏：博主 + 标签云。移动端排在最前，先交代「这是谁」 */}
+          <aside className="order-1 space-y-8 lg:col-span-3">
             <ProfileCard />
             <TagCloud tags={tags} activeTag={activeTag} onTagClick={setActiveTag} />
           </aside>
 
           {/* 中间：文章列表 */}
-          <main className="order-1 space-y-6 lg:order-2 lg:col-span-6">
+          <main className="order-2 space-y-6 lg:col-span-6">
             {visiblePosts.length === 0 ? (
               <p className="rounded-2xl border border-white/10 bg-hero-bg/60 p-8 text-center text-sm text-muted-foreground">
                 这个标签下还没有文章。

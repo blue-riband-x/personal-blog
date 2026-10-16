@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { cn } from "../lib/utils";
+import { asset, cn } from "../lib/utils";
 import { SITE } from "../lib/site";
 
 const navigationLinks = [
@@ -26,25 +26,30 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 lg:px-8">
+    <header className="fixed inset-x-0 top-0 z-50 px-4 lg:px-8">
       <div
         className={cn(
-          "mx-auto max-w-7xl overflow-hidden rounded-2xl border border-white/10 shadow-lg shadow-black/20 backdrop-blur-xl transition-colors duration-300",
+          "mx-auto max-w-7xl overflow-hidden rounded-b-2xl border border-t-0 border-white/10 shadow-lg shadow-black/20 backdrop-blur-xl transition-colors duration-300",
           menuOpen ? "bg-hero-bg/90" : "bg-hero-bg/50",
         )}
       >
         <div className="flex items-center justify-between px-4 py-3 sm:px-6">
           <Link
             to="/"
-            className="flex items-center gap-2.5 text-base font-semibold tracking-tight text-foreground transition-opacity hover:opacity-80 sm:text-lg"
+            className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
             aria-label={`${SITE.name} 首页`}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/30 to-primary/5 text-sm font-bold text-primary">
-              妄
+            <img
+              src={asset("avatar.jpg")}
+              alt=""
+              className="h-8 w-8 shrink-0 rounded-full border border-primary/30 object-cover"
+            />
+            <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+              <span className="text-sm font-semibold tracking-tight text-foreground sm:text-base">
+                {SITE.nameEn}
+              </span>
+              <span className="text-xs font-medium text-primary">Blog</span>
             </span>
-            妄想龙王
-            <span className="text-primary">·</span>
-            世界
           </Link>
 
           <nav
