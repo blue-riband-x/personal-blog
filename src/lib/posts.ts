@@ -5,6 +5,8 @@ export interface PostMeta {
   description: string;
   tags: string[];
   readingTime: number;
+  /** 文章封面图路径，可选。建议用相对 public 目录的路径，如 "covers/xxx.jpg" */
+  cover?: string;
 }
 
 export interface Post extends PostMeta {
@@ -91,7 +93,20 @@ function buildPost(path: string, raw: string): Post {
     description: typeof data.description === "string" ? data.description : "",
     tags: toArray(data.tags),
     readingTime: estimateReadingTime(body),
+    cover: typeof data.cover === "string" && data.cover ? data.cover : undefined,
     content: body,
+  };
+}
+
+/** 站点统计数字 */
+export function getBlogStats() {
+  const tagList = getAllTags();
+  const totalWords = posts.reduce((sum, post) => sum + post.readingTime, 0);
+
+  return {
+    postCount: posts.length,
+    tagCount: tagList.length,
+    totalReadingTime: totalWords,
   };
 }
 

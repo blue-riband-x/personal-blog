@@ -20,5 +20,13 @@
 
 ## 本机环境
 
-- 没有 pnpm，也没有 gh CLI → 用 npm；推送代码由用户手动执行。
+- 没有 pnpm，也没有 gh CLI → 用 npm；git 推送用 GCM（已安装，凭据已缓存，无需交互）。
 - 开发端口固定 3000（`npm run dev`）。
+- **有 HTTP 代理 `127.0.0.1:61473`，直连 GitHub 不通；代理会间歇性 502**。
+  所有 git push / GitHub 请求都要包重试循环，失败一次就放弃会误判。
+
+## 部署状态（2026-10-16 已上线）
+
+- 线上：https://blue-riband-x.github.io/personal-blog/
+- 远端 main = `a321ee6`；旧 VitePress 版本保存在远端分支 `backup-vitepress`（原 `81b82e2`）。
+- 推 main 用 `git push -u origin main --force`（换栈，历史不相关，必须 force）。

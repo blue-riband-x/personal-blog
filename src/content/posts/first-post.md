@@ -3,6 +3,7 @@ title: 第一篇博客 — 启程
 date: 2026-05-31
 description: 这是我的第一篇博客，聊聊建站初衷和未来的计划。
 tags: [随笔, 建站]
+cover: covers/first-post-cover.svg
 ---
 
 # 🚀 第一篇博客 — 启程

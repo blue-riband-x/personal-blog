@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225">
+  <defs>
+    <linearGradient id="coverBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#141414" />
+      <stop offset="60%" stop-color="#0f1a0f" />
+      <stop offset="100%" stop-color="#0d120d" />
+    </linearGradient>
+    <linearGradient id="ray" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#17e817" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#17e817" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="225" fill="url(#coverBg)" />
+
+  <!-- 地平线 glow -->
+  <ellipse cx="200" cy="160" rx="180" ry="12" fill="#17e817" opacity="0.15" />
+
+  <!-- 道路 -->
+  <path d="M200 160 L120 225 L280 225 Z" fill="#17e817" opacity="0.08" />
+  <line x1="200" y1="160" x2="200" y2="225" stroke="#17e817" stroke-width="2" opacity="0.3" />
+
+  <!-- 太阳光芒 -->
+  <circle cx="200" cy="100" r="24" fill="#17e817" opacity="0.9" />
+  <path d="M200 76 L200 20" stroke="#17e817" stroke-width="3" opacity="0.6" stroke-linecap="round" />
+  <path d="M200 124 L200 180" stroke="#17e817" stroke-width="3" opacity="0.6" stroke-linecap="round" />
+  <path d="M176 100 L120 100" stroke="#17e817" stroke-width="3" opacity="0.6" stroke-linecap="round" />
+  <path d="M224 100 L280 100" stroke="#17e817" stroke-width="3" opacity="0.6" stroke-linecap="round" />
+  <path d="M183 83 L143 43" stroke="#17e817" stroke-width="3" opacity="0.4" stroke-linecap="round" />
+  <path d="M217 83 L257 43" stroke="#17e817" stroke-width="3" opacity="0.4" stroke-linecap="round" />
+  <path d="M183 117 L143 157" stroke="#17e817" stroke-width="3" opacity="0.4" stroke-linecap="round" />
+  <path d="M217 117 L257 157" stroke="#17e817" stroke-width="3" opacity="0.4" stroke-linecap="round" />
+</svg>

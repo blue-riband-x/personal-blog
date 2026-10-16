@@ -25,6 +25,8 @@ export const SITE = {
   github: "https://github.com/blue-riband-x",
   /** TODO: 可补充其他社交链接 */
   socials: [] as { label: string; href: string }[],
+  /** 博主简介（用于侧栏） */
+  bio: "一个还在读书、但已经写了不少代码的开发者。主攻 Java 后端，也在折腾 AI 应用与全栈项目。",
   /** 首页展示的技术栈 */
   stack: ["Java", "Spring Boot", "Python", "FastAPI", "React", "MySQL", "LangGraph"],
   /** 建站年份，用于页脚版权 */
