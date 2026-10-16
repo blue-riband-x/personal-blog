@@ -19,10 +19,14 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  // 首页是整屏 3D 场景，浮岛胶囊会显得多余，沿用通栏透明导航；其余页面走浮岛。
+  const navbarVariant = pathname === "/" ? "plain" : "floating";
+
   return (
     <div className="flex min-h-screen flex-col bg-hero-bg">
       <ScrollToTop />
-      <Navbar />
+      <Navbar variant={navbarVariant} />
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />

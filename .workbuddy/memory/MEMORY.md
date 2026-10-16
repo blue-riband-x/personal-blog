@@ -31,8 +31,10 @@
 - **博客页组件在 `src/components/blog/`**：`BlogHero` / `PostCard` / `ProfileCard` / `SiteStats` / `TagCloud`，
   通用组件（跨页面复用）放 `src/components/`，如 `CurveDivider`。
   `src/pages/BlogList.tsx` 只负责组合和状态，不写具体卡片实现。
-- **导航栏是全站浮岛样式**：左右留白、贴顶无空隙（`top-0` + `px-4`，胶囊用 `rounded-b-2xl`）、
-  半透明毛玻璃。左侧是圆形头像 + 英文站名 `SITE.nameEn` + 绿色 `Blog` 字样，不做页面区分。
+- **导航栏有两种形态，由 `App.tsx` 按路由决定**（`Navbar` 的 `variant` prop，样式差异集中在组件内 `VARIANTS` 表）：
+  - `floating`（内容页默认）：左右留白、贴顶无空隙（`top-0` + `px-4`，胶囊 `rounded-b-2xl`）、半透明毛玻璃浮岛。
+  - `plain`（**仅首页**）：通栏贴边、默认全透明、无容器、滚动条区域直接压在整屏 3D 场景上 —— 用户明确要求首页用这一版，别再给首页套浮岛。
+  两种形态内容一致：左侧圆形头像 + 英文站名 `SITE.nameEn` + 绿色 `Blog` 字样。
 - **曲线过渡组件 `CurveDivider`**：两条错位贝塞尔曲线（渐隐绿色辉光 + 背景色主体），
   用于图片/视频与内容区的交界，比直线切割自然。要复用就传 `className` 控高度。
 - **移动端内容区顺序**：博主卡片 → 标签云 → 文章列表 → 站点统计（用 CSS `order` 控制，

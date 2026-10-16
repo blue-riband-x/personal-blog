@@ -11,29 +11,66 @@ const navigationLinks = [
 ];
 
 /**
- * 全局悬浮导航栏。
- *
- * 做成两端留白、圆角胶囊、半透明毛玻璃的「浮岛」形态：
- * 内容与屏幕边缘不接触，浮在 Hero 视频 / 3D 背景之上，
- * 滚动时始终固定，样式不随页面变化，保证全站一致。
+ * 导航栏形态：
+ * - `floating`：两端留白 + 圆角胶囊 + 毛玻璃的「浮岛」，内容页使用，浮在视频背景之上。
+ * - `plain`：通栏贴边、默认全透明，直接在首页整屏 3D 场景上铺开，不做容器化处理。
  */
-export function Navbar() {
+export type NavbarVariant = "floating" | "plain";
+
+/** 两种形态的样式差异集中在此，调整某一种形态只动这一处。 */
+const VARIANTS = {
+  floating: {
+    header: "px-4 lg:px-8",
+    bar: "mx-auto max-w-7xl overflow-hidden rounded-b-2xl border border-t-0 border-white/10 shadow-lg shadow-black/20 backdrop-blur-xl",
+    barClosed: "bg-hero-bg/50",
+    barOpen: "bg-hero-bg/90",
+    inner: "px-4 py-3 sm:px-6",
+    nav: "hidden items-center gap-1 md:flex",
+    link: "rounded-lg px-3.5 py-2 text-sm",
+    linkActive: "bg-white/5 text-primary",
+    linkIdle: "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+    mobileNav: "border-t border-white/10 px-4 pb-4 pt-2",
+    mobileLink: "block rounded-lg px-3 py-2.5",
+  },
+  plain: {
+    header: "",
+    bar: "border-b",
+    barClosed: "border-transparent bg-transparent",
+    barOpen: "border-white/10 bg-hero-bg/90 backdrop-blur-md",
+    inner: "px-6 py-5 lg:px-16",
+    nav: "hidden items-center gap-8 md:flex",
+    link: "text-sm tracking-[0.2em]",
+    linkActive: "text-primary",
+    linkIdle: "text-muted-foreground hover:text-foreground",
+    mobileNav: "border-t border-white/10 px-6 pb-5 pt-2",
+    mobileLink: "block border-b border-white/5 py-3",
+  },
+} as const;
+
+interface NavbarProps {
+  /** 导航栏形态，默认浮岛（内容页）。 */
+  variant?: NavbarVariant;
+}
+
+export function Navbar({ variant = "floating" }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const styles = VARIANTS[variant];
 
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 lg:px-8">
+    <header className={cn("fixed inset-x-0 top-0 z-50", styles.header)}>
       <div
         className={cn(
-          "mx-auto max-w-7xl overflow-hidden rounded-b-2xl border border-t-0 border-white/10 shadow-lg shadow-black/20 backdrop-blur-xl transition-colors duration-300",
-          menuOpen ? "bg-hero-bg/90" : "bg-hero-bg/50",
+          "transition-colors duration-300",
+          styles.bar,
+          menuOpen ? styles.barOpen : styles.barClosed,
         )}
       >
-        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+        <div className={cn("flex items-center justify-between", styles.inner)}>
           <Link
             to="/"
             className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
@@ -52,10 +89,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav
-            aria-label="主导航"
-            className="hidden items-center gap-1 md:flex"
-          >
+          <nav aria-label="主导航" className={styles.nav}>
             {navigationLinks.map((link) => (
               <NavLink
                 key={link.to}
@@ -63,10 +97,9 @@ export function Navbar() {
                 end={link.to === "/"}
                 className={({ isActive }) =>
                   cn(
-                    "rounded-lg px-3.5 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:text-primary",
-                    isActive
-                      ? "bg-white/5 text-primary"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+                    styles.link,
+                    "transition-colors focus-visible:outline-none focus-visible:text-primary",
+                    isActive ? styles.linkActive : styles.linkIdle,
                   )
                 }
               >
@@ -117,7 +150,7 @@ export function Navbar() {
         {menuOpen && (
           <nav
             aria-label="移动端导航"
-            className="animate-fade-in border-t border-white/10 px-4 pb-4 pt-2 md:hidden"
+            className={cn("animate-fade-in md:hidden", styles.mobileNav)}
           >
             {navigationLinks.map((link) => (
               <NavLink
@@ -126,10 +159,9 @@ export function Navbar() {
                 to={link.to}
                 className={({ isActive }) =>
                   cn(
-                    "block rounded-lg px-3 py-2.5 text-sm transition-colors",
-                    isActive
-                      ? "bg-white/5 text-primary"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+                    styles.mobileLink,
+                    "text-sm transition-colors",
+                    isActive ? styles.linkActive : styles.linkIdle,
                   )
                 }
               >
