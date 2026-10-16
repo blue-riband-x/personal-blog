@@ -3,7 +3,7 @@ title: 第一篇博客 — 启程
 date: 2026-05-31
 description: 这是我的第一篇博客，聊聊建站初衷和未来的计划。
 tags: [随笔, 建站]
-cover: covers/first-post-cover.svg
+cover: covers/winter-cat.jpg
 ---
 
 # 🚀 第一篇博客 — 启程
@@ -22,14 +22,14 @@ cover: covers/first-post-cover.svg
 
 ## 技术栈
 
-这个博客基于 **VitePress** 构建，使用 GitHub Pages 免费部署。
+这个博客基于 **React + Vite + Tailwind CSS** 构建，文章用 Markdown 写在仓库里，通过 GitHub Pages 免费部署。
 
-VitePress 的优点：
+这么搭的好处：
 
-- 📝 Markdown 写文章，专注内容
-- 🚀 基于 Vite，开发体验极快
-- 🎨 支持 Vue 组件，可深度定制
-- 📦 纯静态站点，部署简单
+- 📝 Markdown 写文章，内容归内容，样式归样式
+- 🚀 Vite 冷启动和热更新都很快，改完立刻能看到效果
+- 🎨 全站由组件拼装，想改哪块改哪块，不怕牵一发动全身
+- 📦 纯静态产物，省钱、省心、速度快
 
 ## 未来计划
 

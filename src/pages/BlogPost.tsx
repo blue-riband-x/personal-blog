@@ -3,6 +3,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
 import { formatDate, getPost } from "../lib/posts";
+import { asset } from "../lib/utils";
 
 const markdownComponents: Components = {
   a: ({ href, children }) =>
@@ -13,8 +14,14 @@ const markdownComponents: Components = {
         {children}
       </a>
     ),
+  // 正文里的图片同样走 asset()，这样文章里写 `covers/xxx.jpg` 也能正确解析
   img: ({ src, alt }) => (
-    <img src={src} alt={alt} loading="lazy" className="rounded-lg border border-white/10" />
+    <img
+      src={typeof src === "string" ? asset(src) : src}
+      alt={alt}
+      loading="lazy"
+      className="rounded-lg border border-white/10"
+    />
   ),
 };
 

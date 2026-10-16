@@ -26,6 +26,8 @@
 - **public 下的静态资源必须用 `asset()` 拼路径**（`src/lib/utils.ts`）。
   站点部署在 `/personal-blog/` 子路径下，写 `/avatar.jpg` 会指向域名根而 404；
   写相对路径又会在 `/blog/:slug` 多级路由下解析错。别再直接写裸路径。
+  `asset()` 对外链（http/https/data）原样返回，所以文章里直接贴图床地址也没问题。
+  正文图片（`BlogPost.tsx` 的 `img` 组件）也已经接了 `asset()`，文章里写 `covers/xxx.jpg` 即可。
 - **博客页组件在 `src/components/blog/`**：`BlogHero` / `PostCard` / `ProfileCard` / `SiteStats` / `TagCloud`，
   通用组件（跨页面复用）放 `src/components/`，如 `CurveDivider`。
   `src/pages/BlogList.tsx` 只负责组合和状态，不写具体卡片实现。
