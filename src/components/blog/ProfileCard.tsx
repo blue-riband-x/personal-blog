@@ -8,9 +8,9 @@ export function ProfileCard() {
     <section className="rounded-2xl border border-white/10 bg-hero-bg/60 p-6 text-center backdrop-blur-sm">
       <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-2 border-primary/30 bg-hero-bg">
         <img
-          src="/avatar.svg"
+          src="/avatar.jpg"
           alt={SITE.author}
-          className="h-20 w-20 rounded-full"
+          className="h-20 w-20 rounded-full object-cover"
           loading="lazy"
         />
       </div>
