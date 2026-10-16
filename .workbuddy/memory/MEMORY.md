@@ -48,10 +48,17 @@
 - git 推送用 GCM（Git Credential Manager，已安装且凭据已缓存，无需交互）。
 - 全局 git 身份是 `Blue <tengruiqi22@dnui.edu.cn>`，提交会自动用这个作者。
 - 开发端口固定 3000（`npm run dev`）。
-- **有 HTTP 代理 `http://127.0.0.1:61473`（http_proxy / https_proxy 都指向它），
-  直连 GitHub 不通；代理会间歇性 502**。所有 git push / GitHub 请求都要包重试循环，
-  失败一次就放弃会误判（实测有时第 1 次就成，有时要十几二十次）。
-  另外 `api.github.com` 比 `github.com` 稳定，查状态优先走 API。
+- **网络：直连 `github.com:443` 不通**（TCP 超时，沙箱内、沙箱外都一样），必须走本机代理。
+  代理工具重启后端口会变 —— 2026-10-16 晚间从 `61473` 变成了 **`7897`**（Clash 默认混合端口）。
+  已在**仓库级** git config 写死 `http.proxy = http://127.0.0.1:7897`（只影响本仓库、不进版本库），
+  所以 `git push` / `git fetch` 现在可直接用；端口再变就用
+  `git config --local http.proxy http://127.0.0.1:<新端口>` 更新。
+  注意：环境变量里的 `http_proxy` / `https_proxy` 仍指向已失效的 61473，**别依赖它**，
+  也别用 `--noproxy '*'` 去直连（连不上）。查监听端口：`netstat -ano | grep LISTENING`。
+- **`api.github.com` 直连就能通**，比 `github.com` 稳得多，查工作流/仓库状态一律优先走 API。
+- **兜底通道**：万一 `github.com` 又断，可用 GitHub Git Data API 经 `api.github.com` 推送
+  （token 从 `git credential fill` 取），做法见 2026-10-16 日志。注意 API 建的 commit
+  与本地 commit 可能仅差"消息末尾换行"，本地 ref 需用 `git update-ref` 对齐。
 - 本机**装有 Chrome**（`C:\Program Files\Google\Chrome\Application\chrome.exe`），
   可以用 `--headless=new --screenshot=xxx.png --window-size=W,H <url>` 截图验证页面效果。
   注意 headless 有最小窗口宽度限制：`--window-size=390` 实际会被撑到约 500，
@@ -60,6 +67,7 @@
 ## 部署状态（2026-10-16 已上线）
 
 - 线上：https://blue-riband-x.github.io/personal-blog/
-- 远端 main = `1766193`；旧 VitePress 版本保存在远端分支 `backup-vitepress`（原 `81b82e2`）。
-- 推 main 用 `git push origin main`，现在已是 fast-forward，不需要 force。
+- 远端 main = `d3c911c`（内容等同本地 `b1253e3`，tree 完全一致）；旧 VitePress 版本保存在远端分支
+  `backup-vitepress`（原 `81b82e2`）。
+- 推 main 用 `git push origin main`（fast-forward，不需要 force），本仓库已配好代理，直接可用。
 - Actions 工作流 `Deploy blog to GitHub Pages`，push 后约 1~2 分钟完成。
