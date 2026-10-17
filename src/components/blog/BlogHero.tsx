@@ -1,5 +1,6 @@
 import { AmbientVideo } from "../AmbientVideo";
 import { CurveDivider } from "../CurveDivider";
+import { MEDIA } from "../../lib/media";
 import { SITE } from "../../lib/site";
 
 /**
@@ -15,8 +16,8 @@ export function BlogHero() {
   return (
     <section className="relative h-[58vh] min-h-[400px] w-full overflow-hidden bg-hero-bg">
       <AmbientVideo
-        sources={[{ src: "videos/hero.mp4" }]}
-        poster="videos/hero-poster.jpg"
+        sources={[{ src: MEDIA.hero.desktop }]}
+        poster={MEDIA.hero.poster}
         className="absolute inset-0 h-full w-full object-cover"
       />
 

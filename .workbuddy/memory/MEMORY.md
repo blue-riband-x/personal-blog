@@ -45,9 +45,13 @@
   除全站导航栏外不加任何元素 —— 用户明确要求「推倒重做，除了导航栏不要额外的东西」，
   别再往这页塞标题、空状态卡片、分割线之类的东西。要放内容就叠在 `<WorksBackdrop />` 之后
   （背景层是 `absolute inset-0`，页面容器 `min-h-[100svh]`）。
-  视频 `public/videos/works-bg.mp4`（3.3 MB，原始 1764×1176 = 3:2）+ 手机档
+  视频现已托管在阿里云 OSS（详见下面「视频托管」一条）+ 手机档
   `works-bg-mobile.mp4`（1080 宽）+ `works-bg-poster.jpg`（ffmpeg 抽的**整帧**首帧），
   素材来自 MotionSites「Gradient Wave」，商用前需确认授权。
+- **视频/首帧图的外链一律从 `src/lib/media.ts` 的 `MEDIA` 取，不要在组件里写死地址。**
+  GitHub Pages 到国内实测只有 ~1Mbps，所以 mp4 不放 Pages、走阿里云 OSS 直链；
+  换托管只改 `OSS_BASE` 一行。`asset()` 对外链原样返回，两条链路可以共存。
+  改文件用 `?v=N` 破缓存（对象上设了 30 天 `Cache-Control`）。
 - **背景视频一律用 `src/components/AmbientVideo.tsx`**，别自己写 `<video autoPlay muted loop>`：
   React 写 `muted` 的时机可能晚于浏览器首次自动播放尝试，被策略拦下后不会重试，
   画面就永远停在 poster 上（看起来像「完全静止」）。组件会在任何 `play()` 之前把静音
@@ -105,8 +109,22 @@
   **不推进媒体时钟**，拿它截图比对会得到「静止」的错误结论。
 - **本地构建可能卡在 `prepare-out-dir`**：`dist` 里的 mp4 会让 safe-delete 的 trash 失败。
   先用 Python `shutil.rmtree('dist')` 清目录再 `npm run build`。Actions 是 Linux，不受影响。
-- **GitHub Pages 到国内实测约 1Mbps**，这是访客加载体验的硬上限，
-  所以视频/图片体积要按「1Mbps 下多久能看到」来定，不是按好看就行。
+- **GitHub Pages 到国内实测约 1Mbps**（有时低到 62KB/s），图片和 JS 能忍，
+  **视频忍不了** —— 3MB 要下 30 秒，期间画面停在 poster 上，看起来就是「视频静止」。
+
+## 视频托管：阿里云 OSS
+
+- Bucket：`blue-blog-source`，地域**华北2（北京）**，
+  Endpoint `oss-cn-beijing.aliyuncs.com`，
+  直链前缀 `https://blue-blog-source.oss-cn-beijing.aliyuncs.com/`。
+- 对象按 `videos/<文件名>` 存放，与 `public/videos/` 同名，代码从 `src/lib/media.ts` 引用。
+- 权限：**公共读**（已验证 —— 匿名请求不存在的 key 返回 `NoSuchKey` 而不是 `AccessDenied`，
+  说明匿名写权限已放开；访问桶根返回 `AccessDenied` 是正常的，公共读不含 ListObjects）。
+  **「阻止公共访问」必须是关闭状态**，否则一律 403。
+- 访客只是播放，`<video src>` 跨域不需要 CORS，**不用配 CORS 规则**。
+- 用户选择自己在控制台上传、不交密钥。传完用
+  `curl -sI <url> | grep -i content-type` 必须是 `video/mp4`。
+
 - 本机**装有 Chrome**（`C:\Program Files\Google\Chrome\Application\chrome.exe`），
   可以用 `--headless=new --screenshot=xxx.png --window-size=W,H <url>` 截图验证页面效果。
   注意 headless 有最小窗口宽度限制：`--window-size=390` 实际会被撑到约 500，

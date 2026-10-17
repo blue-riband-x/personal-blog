@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { asset } from "../lib/utils";
 
 export interface AmbientVideoSource {
-  /** `public` 下的相对路径，如 `videos/hero.mp4` */
+  /** 完整地址（OSS 直链）或 `public` 下的相对路径，如 `videos/hero.mp4` */
   src: string;
   type?: string;
   /** 媒体查询。浏览器只在「选源」那一刻按它决定，不会随窗口缩放切换 */

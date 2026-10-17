@@ -1,4 +1,5 @@
 import { AmbientVideo } from "../AmbientVideo";
+import { MEDIA } from "../../lib/media";
 
 /**
  * 作品页背景层：MotionSites「Gradient Wave」循环视频。
@@ -15,8 +16,8 @@ import { AmbientVideo } from "../AmbientVideo";
  * 这里做了观感无损的重编码 —— 去掉音轨、二遍定码率 2000k、faststart（moov 前置，边下边播）：
  * 桌面 3.1MB（与原片 SSIM 0.994，和 CRF18 完全同档，只是省掉了一堆冗余码率），
  * 手机另给一条 1080 宽 900k 的版本 1.4MB（手机上根本看不出差别）。
- * 之所以要压得这么狠：GitHub Pages 到国内实测只有 1Mbps 上下，5MB 的视频要下 40 秒，
- * 期间画面只能停在 poster 上 —— 再好看的首帧也不如动起来。
+ * 压缩和换托管是两件事：视频现已托管在阿里云 OSS（见 `lib/media.ts`），带宽不再是瓶颈，
+ * 但体积仍然值得压 —— 首屏流量越小，画面越早起播。
  *
  * 循环：原片首尾帧对不上（最差像素跳 177 级，正常帧间只有 42），直接 loop 会「啪」一下。
  * 所以把末尾 0.5 秒叠到开头做交叉淡化，输出比原片短 0.5 秒 —— 首帧和末帧取自原片的
@@ -30,10 +31,10 @@ export function WorksBackdrop() {
     <div className="absolute inset-0" aria-hidden="true">
       <AmbientVideo
         sources={[
-          { src: "videos/works-bg-mobile.mp4", media: "(max-width: 768px)" },
-          { src: "videos/works-bg.mp4" },
+          { src: MEDIA.works.mobile, media: "(max-width: 768px)" },
+          { src: MEDIA.works.desktop },
         ]}
-        poster="videos/works-bg-poster.jpg"
+        poster={MEDIA.works.poster}
         // 底色与视频首帧同源，poster 解码完成前也不会闪白
         className="h-full w-full bg-[#05070f] object-cover object-[68%_100%] md:object-[50%_100%]"
       />
