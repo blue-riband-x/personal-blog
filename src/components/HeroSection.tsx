@@ -1,10 +1,6 @@
-import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { SITE } from "../lib/site";
-
-const SplineScene = lazy(() => import("@splinetool/react-spline"));
-
-const sceneUrl = "https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode";
+import { HeroBackground } from "./HeroBackground";
 
 export function HeroSection() {
   return (
@@ -13,11 +9,7 @@ export function HeroSection() {
       aria-labelledby="hero-title"
       className="relative flex min-h-screen items-end overflow-hidden bg-hero-bg"
     >
-      <div className="absolute inset-0" aria-hidden="true">
-        <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
-          <SplineScene scene={sceneUrl} className="h-full w-full" />
-        </Suspense>
-      </div>
+      <HeroBackground />
 
       <div className="pointer-events-none absolute inset-0 z-[1] bg-black/30" aria-hidden="true" />
 

@@ -1,0 +1,9 @@
+/**
+ * 首页 3D 场景的模糊缩略图：40×23 的 JPEG，只有 386 字节。
+ *
+ * 内联进 JS 而不是放 public/ —— 它要在 React 首帧就画出来，
+ * 不能等额外的网络往返。作用是在 3D 场景和静态大图都还没到之前，
+ * 先给出一块与真实背景同色调的底色，消除「先纯黑、后突然有画面」的跳变。
+ */
+export const HERO_LQIP =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAXACgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAIEBQYB/8QAIBAAAgIBBAMBAAAAAAAAAAAAAAECAxEEBSFBEzFREv/EABYBAQEBAAAAAAAAAAAAAAAAAAIBAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANiVlcYN/Fwchv8Af5LMdLglfvUpRePf1GPqtQ7ZNvsSK2cSZZosw08lXsnW8BV0ejs/UEwVdtsxjn2BiyUnInGldgBVLxQa9HjoWOADMs6SzxvkAFZ//9k=";
