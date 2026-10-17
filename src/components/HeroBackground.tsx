@@ -14,23 +14,21 @@ const SCENE_START_DELAY_MS = 600;
  *
  * 它是一张跟随鼠标的背景装饰：1MB 运行时 + 4.6MB JS 解析。
  * 没有精确指针的设备（手机、平板）收益几乎为零，省流量模式下更不该花这笔钱。
- * 判断不出来时按「加载」处理，保证能力完整的设备不丢效果。
+ *
+ * 注意别用 `navigator.connection.effectiveType` 判断：Chrome 根据实测带宽估算，
+ * GitHub Pages 到国内这种链路会被判成 `3g`（实测 downlink 1.3Mbps / rtt 250ms），
+ * 于是桌面端正常访问也永远看不到 3D。它已经延迟到首屏之后才加载、且有静态图兜底，
+ * 慢网络下不该被完全禁用。
  */
 function shouldLoadScene() {
   if (typeof window === "undefined") return false;
 
   if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return false;
 
-  const connection = (
-    navigator as Navigator & {
-      connection?: { saveData?: boolean; effectiveType?: string };
-    }
-  ).connection;
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    ?.saveData;
 
-  if (connection?.saveData) return false;
-  if (connection?.effectiveType && /^(slow-)?[23]g$/.test(connection.effectiveType)) return false;
-
-  return true;
+  return !saveData;
 }
 
 /**
