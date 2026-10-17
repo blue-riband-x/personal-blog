@@ -12,8 +12,11 @@ import { AmbientVideo } from "../AmbientVideo";
  * - `poster` 用的是视频真实比例的首帧图，加载期间的构图与播放时完全一致，不会跳一下。
  *
  * 体积：原片 13.3MB（8.2Mbps，还带一条没人听的 AAC 音轨）。
- * 这里做了无损观感的重编码 —— 去掉音轨、CRF 18、faststart（moov 前置，边下边播）：
- * 桌面 5.2MB，手机另给一条 1080 宽的 CRF 20 版本 1.7MB（手机上根本看不出差别）。
+ * 这里做了观感无损的重编码 —— 去掉音轨、二遍定码率 2000k、faststart（moov 前置，边下边播）：
+ * 桌面 3.3MB（与原片 SSIM 0.994，和 CRF18 完全同档，只是省掉了一堆冗余码率），
+ * 手机另给一条 1080 宽 900k 的版本 1.4MB（手机上根本看不出差别）。
+ * 之所以要压得这么狠：GitHub Pages 到国内实测只有 1Mbps 上下，5MB 的视频要下 40 秒，
+ * 期间画面只能停在 poster 上 —— 再好看的首帧也不如动起来。
  *
  * 素材授权：MotionSites「Gradient Wave」（background 分类，标注免费）。
  * 用于商业项目前，请先确认 MotionSites 的授权状态。
