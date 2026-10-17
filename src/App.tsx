@@ -1,13 +1,26 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
-import Home from "./pages/Home";
-import BlogList from "./pages/BlogList";
-import BlogPost from "./pages/BlogPost";
-import Works from "./pages/Works";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
+
+/**
+ * 路由按需加载。
+ *
+ * 全部静态 import 时，首屏要一次性下载并解析所有页面 —— 包括只有文章详情才用到的
+ * react-markdown / remark-gfm，以及首页那套 Spline 运行时。
+ * 访客大多是从一条分享链接直接落到某一页，为他没打开的页面付成本并不划算。
+ */
+const Home = lazy(() => import("./pages/Home"));
+const BlogList = lazy(() => import("./pages/BlogList"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Works = lazy(() => import("./pages/Works"));
+const About = lazy(() => import("./pages/About"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+/** 分块下载期间的占位：只铺底色，不闪白也不跳版 */
+function RouteFallback() {
+  return <div className="min-h-[60vh] w-full bg-hero-bg" aria-hidden="true" />;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,14 +42,16 @@ export default function App() {
       <ScrollToTop />
       <Navbar variant={navbarVariant} />
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<BlogList />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/about" element={<About />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/works" element={<Works />} />
+            <Route path="/about" element={<About />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>

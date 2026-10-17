@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * Sora 自托管。
+ *
+ * 原来是引 Google Fonts 的 CSS：多两个跨域来源（DNS + TLS + 一次 CSS 请求），
+ * 而且是渲染阻塞的 —— 国内访问 googleapis 时快时慢甚至直接失败，首屏就一直白着。
+ * 这里把 latin 子集（variable font，一个文件覆盖 300–700 全部字重，33KB）打进产物：
+ * 同源、零额外握手、带 hash 可长期缓存，视觉与原来完全一致。
+ * 中日韩字符本来就不在 Sora 里，继续走 PingFang SC / 微软雅黑 的系统字体回退。
+ */
+@font-face {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("./assets/fonts/sora-latin-var.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   color-scheme: dark;
   --background: 0 0% 10%;

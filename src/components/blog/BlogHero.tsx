@@ -1,6 +1,6 @@
+import { AmbientVideo } from "../AmbientVideo";
 import { CurveDivider } from "../CurveDivider";
 import { SITE } from "../../lib/site";
-import { asset } from "../../lib/utils";
 
 /**
  * 博客页顶部横幅：全宽视频背景 + 居中标题。
@@ -14,17 +14,11 @@ import { asset } from "../../lib/utils";
 export function BlogHero() {
   return (
     <section className="relative h-[58vh] min-h-[400px] w-full overflow-hidden bg-hero-bg">
-      <video
+      <AmbientVideo
+        sources={[{ src: "videos/hero.mp4" }]}
+        poster="videos/hero-poster.jpg"
         className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-      >
-        <source src={asset("videos/hero.mp4")} type="video/mp4" />
-      </video>
+      />
 
       {/* 顶部压暗：给悬浮导航栏留出可读区域 */}
       <div
