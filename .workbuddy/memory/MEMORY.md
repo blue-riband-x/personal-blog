@@ -57,6 +57,19 @@
   画面就永远停在 poster 上（看起来像「完全静止」）。组件会在任何 `play()` 之前把静音
   落到 DOM，并在 canplay / 切回前台 / 首次用户交互时补播。
   分档用 `sources={[{ src, media }]}`。
+- **首页 3D 背景走 `src/components/HeroBackground.tsx`，三段式加载**：
+  内联 40×23 模糊图（`src/lib/hero-poster.ts`，386B）→ 静态大图
+  （`public/hero-bg.webp` 桌面 57KB / `hero-bg-mobile.webp` 竖屏 15KB）→ Spline 淡入。
+  - **绝不要用 `manualChunks` 把 `@splinetool/*` 手动归组**：会把它提升成首屏
+    chunk 的静态依赖，浏览器解析 index.js 就开始下那 1MB，背景图被挤到 10 秒开外。
+    已验证：加了 10.9s，去掉 2.7s。`vite.config.ts` 顶部写了这条警告。
+  - **别用 `document.readyState` / `load` 排加载顺序**：readyState 一旦 complete
+    就不回退，首页 HTML 里没图片 → React 刚插 `<img>` 时它已是 complete，
+    3D 会立刻开跑。要挂在目标图片自己的 `load` 上。
+  - **别用 `navigator.connection.effectiveType` 判断网络**：国内链路一律被判 3g，
+    会把正常访客的 3D 永久关掉。只留 `hover/pointer` 和 `saveData`。
+  - 静态图的拍摄方式：本地 `vite` + playwright，隐藏文字层后截 canvas；
+    竖屏版要用 `addInitScript` 覆盖 `matchMedia` 强制放行 3D 才能拍到真实构图。
 - **裁切重心按画面内容定，不要一律 `object-center`**：Video 是 3:2、屏幕更宽时会裁上下，
   作品页主体在底部草地，所以用 `object-[68%_100%] md:object-[50%_100%]` 只裁上方黑天空。
 - **poster 必须抽视频整帧**，不能用某个视口的截图 —— 视口截图会带上 `object-cover` 的裁切，
