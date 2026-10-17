@@ -117,13 +117,23 @@
 - Bucket：`blue-blog-source`，地域**华北2（北京）**，
   Endpoint `oss-cn-beijing.aliyuncs.com`，
   直链前缀 `https://blue-blog-source.oss-cn-beijing.aliyuncs.com/`。
-- 对象按 `videos/<文件名>` 存放，与 `public/videos/` 同名，代码从 `src/lib/media.ts` 引用。
-- 权限：**公共读**（已验证 —— 匿名请求不存在的 key 返回 `NoSuchKey` 而不是 `AccessDenied`，
-  说明匿名写权限已放开；访问桶根返回 `AccessDenied` 是正常的，公共读不含 ListObjects）。
+- 对象按 `videos/<文件名>` 存放，源文件在仓库的 `media-src/videos/`
+  （**不在 `public/` 下**，不随构建发布，只作备份）。
+- 改了视频跑 `python scripts/oss-upload.py` 重新上传 + 匿名校验；
+  `--check` 只校验不上传。脚本会写 `Content-Type` 和
+  `Cache-Control: public, max-age=2592000`（**OSS 对 jpg 会猜成
+  application/octet-stream，那浏览器就不当图片加载了**）。
+- 权限：**公共读**（匿名 GET 不存在的 key 返回 `NoSuchKey` 而非 `AccessDenied`
+  即说明匿名读已放开；访问桶根返回 `AccessDenied` 属正常，公共读不含 ListObjects）。
   **「阻止公共访问」必须是关闭状态**，否则一律 403。
+- 访问者是 RAM 子账号 `Ricky@...onaliyun.com`，自定义策略只给
+  `oss:PutObject/GetObject/GetObjectMeta/GetBucketInfo/ListObjects`。
+  `ListObjects` 的 Resource **必须有不带 `/*` 的那条桶 ARN**，只写 `/*` 列目录仍 403。
 - 访客只是播放，`<video src>` 跨域不需要 CORS，**不用配 CORS 规则**。
-- 用户选择自己在控制台上传、不交密钥。传完用
-  `curl -sI <url> | grep -i content-type` 必须是 `video/mp4`。
+- **坑：本机环境变量里残留过 `OSS_ACCESS_KEY_ID`（一组已禁用的旧 key）**，
+  脚本优先级已改成「密钥文件 > 环境变量」，否则会报
+  `InvalidAccessKeyId: ... is disabled` 而密钥文件明明是对的。
+- 凭据只放 `~/.workbuddy/oss-key.txt`（两行：id、secret），用完删，绝不入库。
 
 - 本机**装有 Chrome**（`C:\Program Files\Google\Chrome\Application\chrome.exe`），
   可以用 `--headless=new --screenshot=xxx.png --window-size=W,H <url>` 截图验证页面效果。
