@@ -45,8 +45,27 @@
   除全站导航栏外不加任何元素 —— 用户明确要求「推倒重做，除了导航栏不要额外的东西」，
   别再往这页塞标题、空状态卡片、分割线之类的东西。要放内容就叠在 `<WorksBackdrop />` 之后
   （背景层是 `absolute inset-0`，页面容器 `min-h-[100svh]`）。
-  视频 `public/videos/works-bg.mp4`（13 MB）+ `works-bg-poster.png`（无头 Chrome 抽帧生成），
-  素材来自 MotionSites「Gradient Wave」，商用前需确认授权。竖屏用 `object-[68%_center]` 保住右侧行星。
+  视频 `public/videos/works-bg.mp4`（3.3 MB，原始 1764×1176 = 3:2）+ 手机档
+  `works-bg-mobile.mp4`（1080 宽）+ `works-bg-poster.jpg`（ffmpeg 抽的**整帧**首帧），
+  素材来自 MotionSites「Gradient Wave」，商用前需确认授权。
+- **背景视频一律用 `src/components/AmbientVideo.tsx`**，别自己写 `<video autoPlay muted loop>`：
+  React 写 `muted` 的时机可能晚于浏览器首次自动播放尝试，被策略拦下后不会重试，
+  画面就永远停在 poster 上（看起来像「完全静止」）。组件会在任何 `play()` 之前把静音
+  落到 DOM，并在 canplay / 切回前台 / 首次用户交互时补播。
+  分档用 `sources={[{ src, media }]}`。
+- **裁切重心按画面内容定，不要一律 `object-center`**：Video 是 3:2、屏幕更宽时会裁上下，
+  作品页主体在底部草地，所以用 `object-[68%_100%] md:object-[50%_100%]` 只裁上方黑天空。
+- **poster 必须抽视频整帧**，不能用某个视口的截图 —— 视口截图会带上 `object-cover` 的裁切，
+  加载期的构图就和播放时对不上。ffmpeg：`-frames:v 1 -q:v 3`。
+- **页面路由要懒加载**（`App.tsx` 用 `React.lazy` + `Suspense`）。全部静态 import 时
+  首屏要连带解析 `react-markdown` 和首页的 Spline 运行时，JS 从 95KB 涨到 171KB（gzip）。
+- **字体自托管**：`src/assets/fonts/sora-latin-var.woff2`（33KB 可变字体，覆盖 300–700），
+  `@font-face` 写在 `src/index.css`。别再引 Google Fonts —— 两个跨域来源 + 渲染阻塞，
+  国内经常卡死。中文本来就回退到 PingFang SC / 微软雅黑。
+- **压视频先试二遍定码率，不是 CRF**：CRF 在低复杂度内容上会超配码率
+  （同一素材 CRF18 给 5.2MB，二遍 2000k 给 3.3MB，SSIM 完全相同）。
+  一律 `-an` 去掉音轨（背景视频都是静音的）+ `-movflags +faststart`。
+  改完用 `-lavfi ssim` 和原片比对，SSIM ≥ 0.99 基本可视为观感无损。
 - **项目没装图标库**，需要图标就手写内联 SVG，别引入 `lucide-react`。
 - **导航顺序：首页 / 博客 / 作品 / 关于**（`Navbar.tsx` 的 `navigationLinks`）。
 - **移动端内容区顺序**：博主卡片 → 标签云 → 文章列表 → 站点统计（用 CSS `order` 控制，
@@ -71,6 +90,18 @@
   与本地 commit 可能仅差"消息末尾换行"，本地 ref 需用 `git update-ref` 对齐。
 - **本地 HTTP 请求要加 `--noproxy '*'`**（curl）/ `--no-proxy-server`（Chrome），
   否则会被那个已失效的环境代理拦成 502。
+- **ffmpeg 在 `C:/Users/14386/.workbuddy/binaries/ffmpeg/ffmpeg.exe`**（6.0 essentials，
+  2026-10-17 装的）。GitHub release 直连只有 8KB/s，以后要装同类二进制先试
+  `cdn.npmmirror.com`。npm 同理：默认 registry 会挂死，加
+  `--registry=https://registry.npmmirror.com`。
+- **`playwright-core` 在 `C:/Users/14386/.workbuddy/binaries/node/pw/`**，
+  用 `executablePath` 指本机 Chrome，不下载浏览器。要验证「视频到底有没有在播」必须用它
+  真等实时再读 `video.currentTime` —— headless Chrome 的 `--virtual-time-budget`
+  **不推进媒体时钟**，拿它截图比对会得到「静止」的错误结论。
+- **本地构建可能卡在 `prepare-out-dir`**：`dist` 里的 mp4 会让 safe-delete 的 trash 失败。
+  先用 Python `shutil.rmtree('dist')` 清目录再 `npm run build`。Actions 是 Linux，不受影响。
+- **GitHub Pages 到国内实测约 1Mbps**，这是访客加载体验的硬上限，
+  所以视频/图片体积要按「1Mbps 下多久能看到」来定，不是按好看就行。
 - 本机**装有 Chrome**（`C:\Program Files\Google\Chrome\Application\chrome.exe`），
   可以用 `--headless=new --screenshot=xxx.png --window-size=W,H <url>` 截图验证页面效果。
   注意 headless 有最小窗口宽度限制：`--window-size=390` 实际会被撑到约 500，
