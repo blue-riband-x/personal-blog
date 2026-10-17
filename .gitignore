@@ -6,3 +6,7 @@ dist/
 *.log
 .DS_Store
 .workbuddy/preview/
+
+# 本地产物：视频转码中间文件、截图、验证脚本的输出
+.tmp-*/
+.shots/
