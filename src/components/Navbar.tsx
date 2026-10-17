@@ -7,6 +7,7 @@ import { SITE } from "../lib/site";
 const navigationLinks = [
   { label: "首页", to: "/" },
   { label: "博客", to: "/blog" },
+  { label: "作品", to: "/works" },
   { label: "关于", to: "/about" },
 ];
 
