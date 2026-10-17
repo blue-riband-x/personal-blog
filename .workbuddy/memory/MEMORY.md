@@ -41,11 +41,13 @@
   两种形态内容一致：左侧圆形头像 + 英文站名 `SITE.nameEn` + 绿色 `Blog` 字样。
 - **曲线过渡组件 `CurveDivider`**：两条错位贝塞尔曲线（渐隐绿色辉光 + 背景色主体），
   用于图片/视频与内容区的交界，比直线切割自然。要复用就传 `className` 控高度。
-- **作品页在 `src/pages/Works.tsx`**，组件在 `src/components/works/`：
-  `WorksHero`（全宽视频背景 + 左下标题）、`WorksPlaceholder`（项目区空状态）、
-  `WorksIcons`（内联 SVG 图标）。**项目没装图标库**，别引入 `lucide-react`，图标一律手写 SVG。
-  背景视频 `public/videos/works-bg.mp4`（13 MB）+ `works-bg-poster.png`（无头 Chrome 抽帧生成），
+- **作品页在 `src/pages/Works.tsx`**，目前**只有一层背景视频**（`src/components/works/WorksBackdrop.tsx`），
+  除全站导航栏外不加任何元素 —— 用户明确要求「推倒重做，除了导航栏不要额外的东西」，
+  别再往这页塞标题、空状态卡片、分割线之类的东西。要放内容就叠在 `<WorksBackdrop />` 之后
+  （背景层是 `absolute inset-0`，页面容器 `min-h-[100svh]`）。
+  视频 `public/videos/works-bg.mp4`（13 MB）+ `works-bg-poster.png`（无头 Chrome 抽帧生成），
   素材来自 MotionSites「Gradient Wave」，商用前需确认授权。竖屏用 `object-[68%_center]` 保住右侧行星。
+- **项目没装图标库**，需要图标就手写内联 SVG，别引入 `lucide-react`。
 - **导航顺序：首页 / 博客 / 作品 / 关于**（`Navbar.tsx` 的 `navigationLinks`）。
 - **移动端内容区顺序**：博主卡片 → 标签云 → 文章列表 → 站点统计（用 CSS `order` 控制，
   桌面端仍是左中右三栏）。个人介绍要排在手机端最前面。
