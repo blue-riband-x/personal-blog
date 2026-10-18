@@ -41,13 +41,37 @@
   两种形态内容一致：左侧圆形头像 + 英文站名 `SITE.nameEn` + 绿色 `Blog` 字样。
 - **曲线过渡组件 `CurveDivider`**：两条错位贝塞尔曲线（渐隐绿色辉光 + 背景色主体），
   用于图片/视频与内容区的交界，比直线切割自然。要复用就传 `className` 控高度。
-- **作品页在 `src/pages/Works.tsx`**，目前**只有一层背景视频**（`src/components/works/WorksBackdrop.tsx`），
-  除全站导航栏外不加任何元素 —— 用户明确要求「推倒重做，除了导航栏不要额外的东西」，
-  别再往这页塞标题、空状态卡片、分割线之类的东西。要放内容就叠在 `<WorksBackdrop />` 之后
-  （背景层是 `absolute inset-0`，页面容器 `min-h-[100svh]`）。
-  视频现已托管在阿里云 OSS（详见下面「视频托管」一条）+ 手机档
+- **作品页在 `src/pages/Works.tsx`**，两层：`WorksBackdrop`（背景视频，`absolute inset-0`）
+  + `WorksShowcase`（交互主体，绝对定位自己算坐标）。页面容器 `min-h-[100svh]`，
+  **不再挂 Footer**（`App.tsx` 里 `hideFooter = pathname === "/works"`，
+  否则 121px 页脚会把整屏舞台顶出滚动条）。
+- **作品页是像素风舞台，交互是「按钮位移」而不是两套布局切换**：
+  `activeId === null` 时三个分类按钮纵向排在左侧；点哪个就把它的 `left/top`
+  换成顶部居中，另外两个原地淡出，全程由 CSS transition 补间坐标。
+  状态机在 `src/components/works/WorksShowcase.tsx`，数据在 `src/lib/works.ts`
+  （分类 / `pageSize` / `columns` / `items`），卡片 `WorkCard`、翻页 `WorkPager`、
+  像素图标 `PixelIcon` 都在 `src/components/works/`。
+  - 按钮位置常量集中在文件顶部（`IDLE_TOPS_*` / `ACTIVE_TOP_*` / `BODY_TOP_*`），
+    调布局改那里。
+  - **移动端每页数量单独定**：`MOBILE_PAGE_SIZE = { 2: 1, 3: 4 }`，
+    桌面那套（2 个大的 / 6 个小的）在手机上会直接溢出视口。
+  - **返回图标的位置要按按钮 `minWidth` 算**：桌面 `calc(50% - 160px)`、
+    移动 `calc(50% - 132px)`，写小了 ↵ 会压住分类按钮的左边框。
+- **作品页（以及以后新加的按钮）一律像素风**：文字用 `font-pixel`（Zpix），
+  图标用 `PixelIcon` 的字符网格 + `crispEdges`，别引图标库。
+- **`src/assets/fonts/zpix-pixel.woff2`**（153KB）：Zpix 子集化到 GB2312 一级字库，
+  ASCII 和箭头符号都在里面。`@font-face` 在 `src/index.css`。加字要重新跑 fonttools 子集。
+- **触屏的 `:hover` 会粘住**，所以 `tailwind.config.ts` 里自定义了三个变体，
+  纯装饰性的悬停**不要用原生 `hover:` / `group-hover:`**：
+  - `hoverable:` = `{ & }`，静态媒体查询，给触屏写「默认就显示」的降级样式；
+  - `can-hover:` = `{ &:hover }`，真正的悬停；
+  - `group-can-hover:` = `{ .group:hover & }`。
+  **`can-hover:` 自带 `:hover`，不能当 `hoverable:` 用** —— 实测踩过：摘要文字会一直挂在封面上。
+- 背景视频托管在阿里云 OSS（详见下面「视频托管」一条）+ 手机档
   `works-bg-mobile.mp4`（1080 宽）+ `works-bg-poster.jpg`（ffmpeg 抽的**整帧**首帧），
   素材来自 MotionSites「Gradient Wave」，商用前需确认授权。
+- **版本备份用 annotated tag**：重做某个页面前先 `git tag -a backup/xxx -m "..."`。
+  作品页重设计的回退点是 `backup/pre-works-design`（已推远端）。
 - **视频/首帧图的外链一律从 `src/lib/media.ts` 的 `MEDIA` 取，不要在组件里写死地址。**
   GitHub Pages 到国内实测只有 ~1Mbps，所以 mp4 不放 Pages、走阿里云 OSS 直链；
   换托管只改 `OSS_BASE` 一行。`asset()` 对外链原样返回，两条链路可以共存。
