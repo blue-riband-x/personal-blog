@@ -57,6 +57,10 @@
     桌面那套（2 个大的 / 6 个小的）在手机上会直接溢出视口。
   - **返回图标的位置要按按钮 `minWidth` 算**：桌面 `calc(50% - 160px)`、
     移动 `calc(50% - 132px)`，写小了 ↵ 会压住分类按钮的左边框。
+  - **每页的格子高度必须锁成「满页行数」**：翻页箭头 `inset-y-0` 是贴着网格高度居中的，
+    最后一页作品不满一整页时行数会塌，箭头和页码就跟着跳。用 `WorkCardSpacer`
+    补 `pageSize - items.length` 个等高不可见占位块（和真卡片共用
+    `CARD_BORDER` / `COVER_BOX` / `BAR_HEIGHT`，别另写死高度）。
 - **作品页（以及以后新加的按钮）一律像素风**：文字用 `font-pixel`（Zpix），
   图标用 `PixelIcon` 的字符网格 + `crispEdges`，别引图标库。
 - **`src/assets/fonts/zpix-pixel.woff2`**（153KB）：Zpix 子集化到 GB2312 一级字库，
