@@ -22,6 +22,22 @@
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/**
+ * 作品页的像素字体 Zpix（SIL OFL）。
+ *
+ * 原始 ttf 4.6MB，这里用 fonttools 子集到 GB2312 一级字库 + ASCII，
+ * 压到 153KB —— 覆盖 99% 以上日常用字，缺字回退系统字体。
+ * Zpix 的字形本身就是方块拼的，所以任意字号都能保持像素感，
+ * 但在 12 的整数倍（12/24/36）下最锐利。
+ */
+@font-face {
+  font-family: "Zpix";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/zpix-pixel.woff2") format("woff2");
+}
+
 :root {
   color-scheme: dark;
   --background: 0 0% 10%;

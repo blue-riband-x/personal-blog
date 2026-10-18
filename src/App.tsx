@@ -36,6 +36,8 @@ export default function App() {
   const { pathname } = useLocation();
   // 首页是整屏 3D 场景，浮岛胶囊会显得多余，沿用通栏透明导航；其余页面走浮岛。
   const navbarVariant = pathname === "/" ? "plain" : "floating";
+  // 作品页是整屏背景舞台，下面再挂一条页脚会把页面顶出滚动条，滚下去还露出内容区
+  const hideFooter = pathname === "/works";
 
   return (
     <div className="flex min-h-screen flex-col bg-hero-bg">
@@ -53,7 +55,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
+      {!hideFooter && <Footer />}
     </div>
   );
 }
