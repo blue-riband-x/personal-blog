@@ -1,11 +1,22 @@
 import { asset } from "../../lib/utils";
 import type { WorkItem } from "../../lib/works";
 
+/**
+ * 卡片的"几何骨架"。
+ *
+ * 真卡片和占位块必须**逐像素等高**，否则翻到作品较少的最后一页时，
+ * 网格整体高度会变、贴在两边的翻页箭头和页码会跟着位移。
+ * 所以高度相关的类都抽到这里，两边共用。
+ */
+const CARD_BORDER = "border border-cyan-200/40";
+const COVER_BOX = "relative aspect-[3/2] w-full overflow-hidden";
+const BAR_HEIGHT = { large: "h-14", small: "h-11" } as const;
+
 interface WorkCardProps {
   work: WorkItem;
   /** 入场动画的延迟序号 */
   index: number;
-  /** 大卡片（每页 2 个那种）字号大一点 */
+  /** 大卡片（每页 2 个那个）字号大一点 */
   large?: boolean;
 }
 
@@ -31,9 +42,11 @@ export function WorkCard({ work, index, large = false }: WorkCardProps) {
         className="absolute inset-0 translate-x-3 translate-y-3 border border-cyan-200/30 bg-cyan-300/[0.07] transition-all duration-300 group-can-hover:translate-x-3.5 group-can-hover:translate-y-3.5 group-can-hover:border-cyan-200/50 group-can-hover:bg-cyan-300/[0.12]"
       />
 
-      <div className="relative overflow-hidden border border-cyan-200/40 bg-[#03080f]/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_40px_-22px_rgba(0,0,0,0.95)] backdrop-blur-md transition-colors duration-300 group-can-hover:border-cyan-200/75 group-can-hover:bg-[#04121c]/45">
+      <div
+        className={`relative overflow-hidden ${CARD_BORDER} bg-[#03080f]/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_40px_-22px_rgba(0,0,0,0.95)] backdrop-blur-md transition-colors duration-300 group-can-hover:border-cyan-200/75 group-can-hover:bg-[#04121c]/45`}
+      >
         {/* 封面 */}
-        <div className="relative aspect-[3/2] w-full overflow-hidden">
+        <div className={COVER_BOX}>
           {work.cover ? (
             <img
               src={asset(work.cover)}
@@ -75,9 +88,7 @@ export function WorkCard({ work, index, large = false }: WorkCardProps) {
 
         {/* 名称条 */}
         <div
-          className={`relative flex items-center gap-2.5 border-t border-cyan-200/25 bg-[#02080e]/45 backdrop-blur-sm ${
-            large ? "h-14 px-4" : "h-11 px-3"
-          }`}
+          className={`relative flex items-center gap-2.5 border-t border-cyan-200/25 bg-[#02080e]/45 backdrop-blur-sm ${BAR_HEIGHT[large ? "large" : "small"]} ${large ? "px-4" : "px-3"}`}
         >
           <span className="h-2 w-2 shrink-0 bg-primary/80" aria-hidden="true" />
           <h3
@@ -90,5 +101,20 @@ export function WorkCard({ work, index, large = false }: WorkCardProps) {
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * 空位占位块：占一个格子、高度和真卡片完全一致，但不可见。
+ *
+ * 用途是**锁住每页的高度** —— 最后一页作品不够一整页时补几个占位，
+ * 网格行数就不会从 2 掉到 1，两侧的翻页箭头和下方页码也就不会跳。
+ */
+export function WorkCardSpacer({ large = false }: { large?: boolean }) {
+  return (
+    <div aria-hidden="true" className={`invisible ${CARD_BORDER}`}>
+      <div className={COVER_BOX} />
+      <div className={BAR_HEIGHT[large ? "large" : "small"]} />
+    </div>
   );
 }

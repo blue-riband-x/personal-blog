@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery } from "../../lib/use-media-query";
 import { WORK_CATEGORIES, pageCount, pageItems } from "../../lib/works";
 import { ENTER, PixelIcon } from "./PixelIcon";
-import { WorkCard } from "./WorkCard";
+import { WorkCard, WorkCardSpacer } from "./WorkCard";
 import { PageIndicator, PagerArrow } from "./WorkPager";
 
 /** 未选中时三个按钮的纵向位置（相对舞台高度的百分比） */
@@ -167,6 +167,14 @@ export function WorksShowcase() {
                     index={index}
                     large={active.columns === 2}
                   />
+                ))}
+
+                {/*
+                  补齐空位：最后一页作品不满一整页时，用等高占位把行数撑满。
+                  少了它们，网格会从两行塌成一行，贴边居中的翻页箭头和页码就跟着跳。
+                */}
+                {Array.from({ length: Math.max(0, pageSize - items.length) }, (_, i) => (
+                  <WorkCardSpacer key={`spacer-${i}`} large={active.columns === 2} />
                 ))}
               </div>
 
