@@ -17,7 +17,9 @@ export function PagerArrow({ direction, disabled, onClick, label, className = ""
       disabled={disabled}
       aria-label={label}
       className={[
-        "pointer-events-auto flex h-12 w-12 items-center justify-center border-2 border-cyan-100/60",
+        // 尺寸由调用方给（列表翻页 56/40，详情图 44）—— 这里写死默认值会和传进来的
+        // h-* / w-* 撞车，而 Tailwind 谁赢只取决于生成顺序，不是 class 的先后
+        "pointer-events-auto flex items-center justify-center border-2 border-cyan-100/60",
         // 底色必须接近全实：右侧箭头落在星球的高光区，15% 的透光就能把箭头吃掉
         "bg-[#01080e]/[0.96] text-cyan-50 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] backdrop-blur-[6px]",
         "transition-colors duration-150",

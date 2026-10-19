@@ -1,5 +1,5 @@
-import { asset } from "../../lib/utils";
 import type { WorkItem } from "../../lib/works";
+import { CoverArt, Scanlines } from "./CoverArt";
 
 /**
  * 卡片的"几何骨架"。
@@ -18,6 +18,8 @@ interface WorkCardProps {
   index: number;
   /** 大卡片（每页 2 个那个）字号大一点 */
   large?: boolean;
+  /** 点开详情；不传则卡片不可点 */
+  onOpen?: (work: WorkItem) => void;
 }
 
 /**
@@ -27,10 +29,11 @@ interface WorkCardProps {
  * 1. 托盘 —— 往右下偏移 6px 的实心浅色框，卡片"浮"在它上面；
  * 2. 主体 —— 只留 35% 的底色 + 轻微毛玻璃，边框用青色细线；
  * 3. 封面 —— 没有图片时用 `hue` 生成很淡的点阵，只做氛围，不抢背景。
+ *
+ * 整张卡片的点击区是一层铺满的透明 `<button>`，而不是把 `<article>` 改成按钮 ——
+ * 这样标题还能是 `<h3>`，屏幕阅读器和 SEO 都不吃亏。
  */
-export function WorkCard({ work, index, large = false }: WorkCardProps) {
-  const hue = work.hue ?? 170;
-
+export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) {
   return (
     <article
       className="group animate-fade-up relative opacity-0"
@@ -47,29 +50,8 @@ export function WorkCard({ work, index, large = false }: WorkCardProps) {
       >
         {/* 封面 */}
         <div className={COVER_BOX}>
-          {work.cover ? (
-            <img
-              src={asset(work.cover)}
-              alt={work.title}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundColor: `hsl(${hue} 60% 12% / 0.35)`,
-                backgroundImage: `radial-gradient(130% 100% at 50% 125%, hsl(${hue} 80% 55% / 0.3), transparent 60%), repeating-linear-gradient(0deg, hsl(${hue} 80% 70% / 0.035) 0 1px, transparent 1px 6px)`,
-              }}
-            />
-          )}
-
-          {/* 扫描线，和背景视频的像素颗粒对上 */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.22)_0_1px,transparent_1px_3px)]"
-          />
+          <CoverArt work={work} />
+          <Scanlines />
 
           {/* 四角像素标记 */}
           <span aria-hidden="true" className="absolute left-1.5 top-1.5 h-1.5 w-1.5 bg-cyan-200/50 transition-colors group-can-hover:bg-primary" />
@@ -100,6 +82,15 @@ export function WorkCard({ work, index, large = false }: WorkCardProps) {
           </h3>
         </div>
       </div>
+
+      {onOpen && (
+        <button
+          type="button"
+          onClick={() => onOpen(work)}
+          aria-label={`查看「${work.title}」`}
+          className="absolute inset-0 z-10 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-primary"
+        />
+      )}
     </article>
   );
 }

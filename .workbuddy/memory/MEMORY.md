@@ -61,6 +61,25 @@
     最后一页作品不满一整页时行数会塌，箭头和页码就跟着跳。用 `WorkCardSpacer`
     补 `pageSize - items.length` 个等高不可见占位块（和真卡片共用
     `CARD_BORDER` / `COVER_BOX` / `BAR_HEIGHT`，别另写死高度）。
+- **作品详情是浮层放大视图（整个作品模块通用）**：`WorkCard` 上铺一层透明
+  `<button>` 做点击区 → `WorksShowcase` 存 `detail` 状态 → `WorkDetail`
+  居中弹出（上图 / 下文 / 最下面「立即体验」）。网格那层挂 `inert`，
+  Esc 逐层退（详情自己监听 Esc，外层要先判断 `detail` 再关分类）。
+  详情用 `key={work.id}` 挂载，换作品时图片索引自动归零。
+  - `WorkGallery` **不是轮播图**：每张图常驻同一层，只按离当前张的环形距离
+    改 `translateX / scale / opacity / blur`（`offsetOf()` 算最短距离，
+    三张图停在第 1 张时最后一张在左边）。侧边位移由 `SIDE_SHIFT` 控制。
+  - **中间那张的宽度占比是三个数的总开关**：邻居贴在框架边缘被裁，
+    露出的那一条恒等于 `(1 - 占比) / 2`；框架 `aspect = 图的宽高比 ÷ 占比`。
+    桌面 72% → `aspect-[22/10]`，手机 88% → `aspect-[20/11]`（露 22px）。
+    手机试过 90%，邻居只剩 18px 基本看不见，别再往上加。
+  - **别给已经内联 `transform` 的元素再叠 `-translate-y-1/2`**：
+    它和 `active:translate-y-[2px]` 写的是同一个 `--tw-translate-y`，
+    按下瞬间按钮跳 22px，`click` 根本不触发。居中一律用父层
+    `inset-y-0 flex items-center`。
+  - 卡片与详情共用 `CoverArt`（封面 / hue 占位图案）+ `Scanlines`。
+  - 数据侧 `workGallery()` / `workDescription()` 兜底，占位作品也能开详情，
+    只是不渲染「立即体验」。
 - **作品页（以及以后新加的按钮）一律像素风**：文字用 `font-pixel`（Zpix），
   图标用 `PixelIcon` 的字符网格 + `crispEdges`，别引图标库。
 - **`src/assets/fonts/zpix-pixel.woff2`**（153KB）：Zpix 子集化到 GB2312 一级字库，

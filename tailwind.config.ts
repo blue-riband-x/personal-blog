@@ -75,10 +75,16 @@ const config: Config = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        /** 作品详情面板的入场：轻微下落 + 放大，别做成弹窗那种夸张的弹跳 */
+        "panel-in": {
+          "0%": { opacity: "0", transform: "translateY(10px) scale(0.965)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "fade-in": "fade-in 0.5s ease-out forwards",
+        "panel-in": "panel-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },
