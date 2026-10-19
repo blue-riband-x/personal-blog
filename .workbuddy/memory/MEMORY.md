@@ -79,8 +79,14 @@
     按下瞬间按钮跳 22px，`click` 根本不触发。居中一律用父层
     `inset-y-0 flex items-center`。
   - 卡片与详情共用 `CoverArt`（封面 / hue 占位图案）+ `Scanlines`。
+    `CoverArt` 按扩展名识别视频（复用 `AmbientVideo` 自动播放），
+    `fit="cover"` 裁切填满给卡片、`fit="contain"` 完整显示 + 同画面虚化垫底给详情。
+  - **竖幅作品（9:16 视频/海报）要写 `aspect: "tall"`**：图区换成 9:16 立式卡片
+    （框架给高度：手机 `min(44svh,340px)`、桌面 `min(56svh,460px)`），
+    **`SIDE_SHIFT` 必须同步换成 105**（横图是 56），否则邻居会有一半藏在当前张后面。
+  - **页码在图区下方，不在图区里**：竖屏素材占满整卡高度时会压住画面主体。
   - 数据侧 `workGallery()` / `workDescription()` 兜底，占位作品也能开详情，
-    只是不渲染「立即体验」。
+    只是不渲染「立即体验」；`gallery` 里图片和视频可以混着放。
 - **作品页（以及以后新加的按钮）一律像素风**：文字用 `font-pixel`（Zpix），
   图标用 `PixelIcon` 的字符网格 + `crispEdges`，别引图标库。
 - **`src/assets/fonts/zpix-pixel.woff2`**（153KB）：Zpix 子集化到 GB2312 一级字库，
@@ -178,10 +184,12 @@
 - Bucket：`blue-blog-source`，地域**华北2（北京）**，
   Endpoint `oss-cn-beijing.aliyuncs.com`，
   直链前缀 `https://blue-blog-source.oss-cn-beijing.aliyuncs.com/`。
-- 对象按 `videos/<文件名>` 存放，源文件在仓库的 `media-src/videos/`
-  （**不在 `public/` 下**，不随构建发布，只作备份）。
-- 改了视频跑 `python scripts/oss-upload.py` 重新上传 + 匿名校验；
-  `--check` 只校验不上传。脚本会写 `Content-Type` 和
+- **对象键 = `media-src/` 下的相对路径**：`media-src/works/design/a.mp4` → `works/design/a.mp4`。
+  已用目录：`videos/`（站点背景视频）、`works/design/`（创意设计分类的视频和图片）。
+  源文件放在仓库的 `media-src/`（**不在 `public/` 下**，不随构建发布，只作备份）。
+- 改了素材跑 `python scripts/oss-upload.py` 重新上传 + 匿名校验；
+  `--only works/design` 只传某个目录，`--check` 只校验不上传。
+  脚本会写 `Content-Type` 和
   `Cache-Control: public, max-age=2592000`（**OSS 对 jpg 会猜成
   application/octet-stream，那浏览器就不当图片加载了**）。
 - 权限：**公共读**（匿名 GET 不存在的 key 返回 `NoSuchKey` 而非 `AccessDenied`
