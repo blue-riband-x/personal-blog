@@ -8,7 +8,12 @@
  * 详情页的字段都可以留空：没有 `gallery` 就退回封面（或 `hue` 占位图案），
  * 没有 `link` 就不显示「立即体验」，没有 `description` 就用 `summary`。
  * 所以新增一个占位作品只要写 `id / title / summary / hue` 四行。
+ *
+ * `gallery` 里的条目**可以是图片也可以是视频**（按扩展名自动识别），
+ * 图片/视频可以来自 `public` 下的相对路径，也可以直接写 OSS 外链。
  */
+
+import { MEDIA } from "./media";
 
 export interface WorkItem {
   id: string;
@@ -24,6 +29,12 @@ export interface WorkItem {
   gallery?: string[];
   /** 详情页简介，段落之间空一行 */
   description?: string;
+  /**
+   * 详情图区的朝向，默认 `wide`（16:10 截图）。
+   * 竖屏视频/竖幅海报写 `tall`，图区会换成 9:16 的立式卡片，
+   * 素材按原比例铺满，不会被裁成一条。
+   */
+  aspect?: "wide" | "tall";
   /** 「立即体验」的目标地址；留空则该按钮不出现 */
   link?: string;
   /** 链接按钮的文案，默认「立即体验」 */
@@ -114,6 +125,24 @@ export const WORK_CATEGORIES: WorkCategory[] = [
     pageSize: 6,
     columns: 3,
     items: [
+      {
+        id: "natsu-slope",
+        title: "夏日坡道",
+        summary: "9:16 竖屏短片 · 三个镜头的夏日放学路",
+        hue: 30,
+        aspect: "tall",
+        cover: MEDIA.design.natsuSlope.poster,
+        // 第一个是视频，后面两个是分镜截图 —— 详情里能翻着看
+        gallery: [
+          MEDIA.design.natsuSlope.video,
+          ...MEDIA.design.natsuSlope.stills,
+        ],
+        meta: "2026 · 9:16 竖屏短片 · AI 生成 + 剪辑",
+        description:
+          "一段 5 秒的竖屏短片：放学后沿着海边的坡道骑下去，穿过铁道口，天色正好。全片只有三个镜头 —— 骑车的全景、一个回头特写、日落时分的铁路道口，靠镜头的切换把节奏提起来。\n\n" +
+          "画面是 AI 生成的动画风格，分镜、调色和剪辑是在生成之后自己接的：先把想要的三个瞬间分别生成，再按「远 — 近 — 远」的顺序剪，让 5 秒里有一次呼吸。\n\n" +
+          "做竖屏是因为它本来就该在手机上竖着看 —— 详情页里这条会保持 9:16 原比例，两侧用虚化的画面补满，不裁掉任何一帧。",
+      },
       { id: "d1", title: "光污染海报", summary: "赛博色调的视觉实验", hue: 320 },
       { id: "d2", title: "赛博名片", summary: "可交互的电子名片", hue: 260 },
       { id: "d3", title: "像素图标集", summary: "16×16 手绘图标 120 枚", hue: 175 },

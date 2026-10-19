@@ -29,4 +29,15 @@ export const MEDIA = {
     mobile: oss("videos/works-bg-mobile.mp4"),
     poster: oss("videos/works-bg-poster.jpg"),
   },
+  /**
+   * 「创意设计」分类的作品素材：图片和视频都放在对象的 `works/design/` 目录下。
+   * 新增设计作品就丢文件上去，再在这里加一条 —— 组件里不要写死地址。
+   */
+  design: {
+    natsuSlope: {
+      video: oss("works/design/natsu-slope.mp4"),
+      poster: oss("works/design/natsu-slope-poster.jpg"),
+      stills: [oss("works/design/natsu-slope-01.jpg"), oss("works/design/natsu-slope-02.jpg")],
+    },
+  },
 } as const;

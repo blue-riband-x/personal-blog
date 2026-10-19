@@ -1,5 +1,6 @@
-import type { WorkItem } from "../../lib/works";
-import { CoverArt, Scanlines } from "./CoverArt";
+import { workGallery, type WorkItem } from "../../lib/works";
+import { CoverArt, isVideoSource, Scanlines } from "./CoverArt";
+import { PLAY, PixelIcon } from "./PixelIcon";
 
 /**
  * 卡片的"几何骨架"。
@@ -34,6 +35,9 @@ interface WorkCardProps {
  * 这样标题还能是 `<h3>`，屏幕阅读器和 SEO 都不吃亏。
  */
 export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) {
+  // 详情里含视频就打个角标，让人知道点进去是会动的
+  const hasVideo = workGallery(work).some(isVideoSource);
+
   return (
     <article
       className="group animate-fade-up relative opacity-0"
@@ -56,6 +60,14 @@ export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) 
           {/* 四角像素标记 */}
           <span aria-hidden="true" className="absolute left-1.5 top-1.5 h-1.5 w-1.5 bg-cyan-200/50 transition-colors group-can-hover:bg-primary" />
           <span aria-hidden="true" className="absolute right-1.5 top-1.5 h-1.5 w-1.5 bg-cyan-200/50 transition-colors group-can-hover:bg-primary" />
+
+          {hasVideo && (
+            // 放右上角：底部会被摘要盖住（触屏上摘要默认就是显示的）
+            <span className="font-pixel absolute right-3 top-2 z-[1] flex items-center gap-1 border border-cyan-100/40 bg-[#01080e]/85 px-1.5 py-1 text-[10px] leading-[12px] text-cyan-100/85 backdrop-blur-[4px]">
+              <PixelIcon pattern={PLAY} className="h-2.5 w-2.5 text-primary" />
+              视频
+            </span>
+          )}
 
           {/*
             摘要：桌面端悬停才浮上来；触屏没有 hover，就一直显示，
