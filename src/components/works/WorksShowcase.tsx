@@ -115,9 +115,11 @@ export function WorksShowcase() {
                   : "cursor-pointer border-cyan-200/40 bg-[#04101a]/75 text-foreground/90 can-hover:border-cyan-200/85 can-hover:bg-[#0a2030]/85 can-hover:text-primary",
               ].join(" ")}
               style={{
-                left: isActive ? "50%" : isDesktop ? "7%" : "50%",
+                // 三颗按钮始终在页面的垂直中线上 —— 未选中时纵向排开，
+                // 选中后只有 top 在变，横向不做位移，滑向顶部的过程更干净
+                left: "50%",
                 top: isActive ? activeTop : idleTop,
-                transform: `translate(${isActive || !isDesktop ? "-50%" : "0"}, -50%)`,
+                transform: "translate(-50%, -50%)",
                 opacity: !isActive && !isIdle ? 0 : 1,
                 pointerEvents: isActive ? "none" : "auto",
                 minWidth: isDesktop ? "12.5rem" : "9.5rem",

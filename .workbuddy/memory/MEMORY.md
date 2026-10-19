@@ -46,8 +46,9 @@
   **不再挂 Footer**（`App.tsx` 里 `hideFooter = pathname === "/works"`，
   否则 121px 页脚会把整屏舞台顶出滚动条）。
 - **作品页是像素风舞台，交互是「按钮位移」而不是两套布局切换**：
-  `activeId === null` 时三个分类按钮纵向排在左侧；点哪个就把它的 `left/top`
-  换成顶部居中，另外两个原地淡出，全程由 CSS transition 补间坐标。
+  `activeId === null` 时三个分类按钮纵向排在**页面垂直中线上**（左右也居中，
+  `left: 50%` + `translate(-50%, -50%)`，桌面端以前是贴左 7%，用户要求改居中）；
+  点哪个就把它 `top` 换成顶部居中，另外两个原地淡出，全程由 CSS transition 补间。
   状态机在 `src/components/works/WorksShowcase.tsx`，数据在 `src/lib/works.ts`
   （分类 / `pageSize` / `columns` / `items`），卡片 `WorkCard`、翻页 `WorkPager`、
   像素图标 `PixelIcon` 都在 `src/components/works/`。
