@@ -84,6 +84,27 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
 
   const step = (delta: number) => onIndexChange((index + delta + total) % total);
 
+  /**
+   * 一张卡的公共样式。
+   *
+   * 高度统一、宽度由**素材自己的比例**反过来算，所以一横一竖并排时是等高不同宽，
+   * 谁都不会被塞进不合适的框里。
+   */
+  const cardClass = (aspect: WorkAspect) =>
+    [
+      "absolute left-1/2 top-1/2 max-w-[94%] overflow-hidden border border-cyan-200/40",
+      CARD_AR[aspect],
+      CARD_HEIGHT[frame],
+      "transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+    ].join(" ");
+
+  // 只有两张时，环形排不开 —— 前后张其实是同一张，只在一侧出现。
+  // 补一个镜像副本到另一侧，翻页时左右都能看到虚化的邻居，构图才对称。
+  // 副本的偏移取**邻居偏移的相反数**：翻到第 2 张时邻居在第 1 张左边，副本就得去右边。
+  const mirror = total === 2 ? slides[(index + 1) % 2] : null;
+  const mirrorDelta = mirror ? -offsetOf((index + 1) % 2, index, total) : 0;
+  const mirrorShift = mirror ? shiftPercent(slides[index].aspect, mirror.aspect) : 0;
+
   return (
     <div className="w-full">
       <div
@@ -103,10 +124,7 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
               aria-label={delta === 0 ? `当前第 ${i + 1} 张` : `查看第 ${i + 1} 张`}
               aria-current={delta === 0 || undefined}
               className={[
-                "absolute left-1/2 top-1/2 max-w-[94%] overflow-hidden border border-cyan-200/40",
-                CARD_AR[slide.aspect],
-                CARD_HEIGHT[frame],
-                "transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                cardClass(slide.aspect),
                 delta === 0
                   ? "cursor-default shadow-[0_0_44px_-10px_rgba(0,0,0,0.95)]"
                   : "cursor-pointer",
@@ -126,6 +144,23 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
             </button>
           );
         })}
+
+        {/* 两张时另一侧的镜像副本：纯装饰，不接事件也不进无障碍树 */}
+        {mirror && (
+          <div
+            aria-hidden="true"
+            className={`${cardClass(mirror.aspect)} pointer-events-none`}
+            style={{
+              transform: `translate(calc(-50% + ${mirrorDelta * mirrorShift}%), -50%) scale(${SCALE[1]})`,
+              opacity: OPACITY[1],
+              filter: FILTER[1],
+              zIndex: 20,
+            }}
+          >
+            <CoverArt work={work} src={mirror.src} fit="contain" />
+            <Scanlines />
+          </div>
+        )}
 
         {/* 只有一张图时不需要翻页箭头。
             居中用 flex 而不是 -translate-y-1/2 —— 按下时按钮要 translate-y-[2px]，
