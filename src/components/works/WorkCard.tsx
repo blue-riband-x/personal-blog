@@ -36,7 +36,7 @@ interface WorkCardProps {
  */
 export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) {
   // 详情里含视频就打个角标，让人知道点进去是会动的
-  const hasVideo = workGallery(work).some(isVideoSource);
+  const hasVideo = workGallery(work).some((slide) => isVideoSource(slide.src));
 
   return (
     <article

@@ -1,15 +1,33 @@
-import type { WorkItem } from "../../lib/works";
+import type { WorkAspect, WorkItem, WorkSlide } from "../../lib/works";
 import { CoverArt, Scanlines } from "./CoverArt";
 import { PageIndicator, PagerArrow } from "./WorkPager";
 
+/** 两种素材的宽高比，位移计算要用到 */
+const AR: Record<WorkAspect, number> = { wide: 16 / 10, tall: 9 / 16 };
+
 /**
- * 侧边图片相对**自身宽度**的位移（百分比）。
+ * 卡片高度占框架高度的比例。
  *
- * 横图和竖图的可用宽度差得很远，所以不能共用一个值：
- * - 横图占 72~88% 宽，往两边推 56% 正好露出一小截；
- * - 竖图只占中间窄窄一条，两边空得很，推开 105% 才能「前一张 / 后一张」都完整露出来。
+ * 横框里卡片几乎顶满（高度反过来决定 72% 的宽度，邻居正好只在边缘露一条）；
+ * 竖框留出上下呼吸，不然 9:16 的卡片会顶到边框。
  */
-const SIDE_SHIFT = { wide: 56, tall: 105 } as const;
+const CARD_HEIGHT: Record<WorkAspect, string> = {
+  wide: "h-[99%]",
+  tall: "h-[92%]",
+};
+
+const CARD_AR: Record<WorkAspect, string> = {
+  wide: "aspect-[16/10]",
+  tall: "aspect-[9/16]",
+};
+
+/**
+ * 框架。横图（截图）按比例给宽度，竖图（短片/海报）按高度给 —— 见下面注释。
+ */
+const FRAME: Record<WorkAspect, string> = {
+  wide: "aspect-[20/11] md:aspect-[22/10]",
+  tall: "h-[min(44svh,340px)] md:h-[min(56svh,460px)]",
+};
 
 /** 按「离当前张的距离」索引：0 = 当前，1 = 左右邻居，2 = 更远（藏起来） */
 const SCALE = [1, 0.84, 0.7];
@@ -17,25 +35,21 @@ const OPACITY = [1, 0.78, 0];
 const FILTER = ["none", "blur(5px) brightness(0.85)", "blur(9px) brightness(0.45)"];
 
 /**
- * 框架 / 卡片的两套几何。
+ * 邻居要往旁边推多少（相对**它自己**的宽度，百分比）。
  *
- * 横图（截图）：框架比例 = 图的 16:10 ÷ 宽度占比，手机 88% → 20/11，桌面 72% → 22/10。
- * 竖图（9:16 短片）：宽度由高度反推，所以给框架一个**高度**而不是宽高比，
- * 卡片贴上 `aspect-[9/16]` 自己算宽度 —— 手机上 340 高 ≈ 191 宽，桌面 460 高 ≈ 259 宽。
+ * 所有卡片等高，所以宽度比就等于宽高比。两张卡并排时中心距 = 两卡半宽之和，
+ * 再让邻居钻到当前张底下一点点（5% 当前卡宽），视觉上像一叠摊开的卡片。
+ * 整个式子消掉了框架的实际像素尺寸，横竖混排也不会算错。
  */
-const FRAME = {
-  wide: "aspect-[20/11] md:aspect-[22/10]",
-  tall: "h-[min(44svh,340px)] md:h-[min(56svh,460px)]",
-} as const;
-
-const CARD = {
-  wide: "aspect-[16/10] w-[88%] md:w-[72%]",
-  tall: "aspect-[9/16] h-[92%]",
-} as const;
+function shiftPercent(current: WorkAspect, self: WorkAspect) {
+  const c = AR[current];
+  const s = AR[self];
+  return ((c + s) / (2 * s) - (0.05 * c) / s) * 100;
+}
 
 interface WorkGalleryProps {
   work: WorkItem;
-  images: string[];
+  slides: WorkSlide[];
   /** 当前第几张（受控 —— 交给 WorkDetail 统一接管键盘左右键） */
   index: number;
   onIndexChange: (index: number) => void;
@@ -48,10 +62,15 @@ interface WorkGalleryProps {
  * 只按**离当前张的距离**改 `translateX / scale / opacity / blur` 四个值，
  * 位置和虚化都交给 CSS 补间。所以翻页时看到的是「中间这张退到旁边、
  * 旁边那张顶上来」，而不是一条胶卷在滑动。
+ *
+ * 每张卡片的高度统一、宽度由**素材自己的比例**推算，所以一组里混着
+ * 16:9 街景和 9:16 海报时，两张卡是等高不同宽，谁都不会被塞进不合适的框里。
  */
-export function WorkGallery({ work, images, index, onIndexChange }: WorkGalleryProps) {
-  const total = images.length;
-  const tall = work.aspect === "tall";
+export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryProps) {
+  const total = slides.length;
+  // 框架跟着**当前这张**走，而不是跟着作品 —— 一横一竖混排时，
+  // 竖版海报能占满整个框，不会被塞进横向的矮框里缩成一条。
+  const frame = slides[index]?.aspect ?? work.aspect ?? "wide";
 
   // 没配图时退回封面或 hue 占位图案，至少让详情页有一张底图
   if (total === 0) {
@@ -64,28 +83,29 @@ export function WorkGallery({ work, images, index, onIndexChange }: WorkGalleryP
   }
 
   const step = (delta: number) => onIndexChange((index + delta + total) % total);
-  const shift = SIDE_SHIFT[tall ? "tall" : "wide"];
 
   return (
     <div className="w-full">
       <div
-        className={`relative w-full overflow-hidden border-b border-cyan-200/25 bg-[#03080f]/60 ${FRAME[tall ? "tall" : "wide"]}`}
+        className={`relative w-full overflow-hidden border-b border-cyan-200/25 bg-[#03080f]/60 ${FRAME[frame]}`}
       >
-        {images.map((src, i) => {
+        {slides.map((slide, i) => {
           const delta = offsetOf(i, index, total);
           const depth = Math.min(Math.abs(delta), 2);
+          const shift = shiftPercent(slides[index].aspect, slide.aspect);
 
           return (
             <button
-              key={`${src}-${i}`}
+              key={`${slide.src}-${i}`}
               type="button"
               onClick={() => delta !== 0 && onIndexChange(i)}
               tabIndex={depth <= 1 ? 0 : -1}
               aria-label={delta === 0 ? `当前第 ${i + 1} 张` : `查看第 ${i + 1} 张`}
               aria-current={delta === 0 || undefined}
               className={[
-                "absolute left-1/2 top-1/2 overflow-hidden border border-cyan-200/40",
-                CARD[tall ? "tall" : "wide"],
+                "absolute left-1/2 top-1/2 max-w-[94%] overflow-hidden border border-cyan-200/40",
+                CARD_AR[slide.aspect],
+                CARD_HEIGHT[frame],
                 "transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 delta === 0
                   ? "cursor-default shadow-[0_0_44px_-10px_rgba(0,0,0,0.95)]"
@@ -101,7 +121,7 @@ export function WorkGallery({ work, images, index, onIndexChange }: WorkGalleryP
                 pointerEvents: depth <= 1 ? "auto" : "none",
               }}
             >
-              <CoverArt work={work} src={src} fit="contain" />
+              <CoverArt work={work} src={slide.src} fit="contain" />
               <Scanlines />
             </button>
           );

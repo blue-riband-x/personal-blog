@@ -15,7 +15,7 @@ interface WorkDetailProps {
  * 所以换一个作品时组件会重建，图片索引自动回到第一张，不用手动重置。
  */
 export function WorkDetail({ work, onClose }: WorkDetailProps) {
-  const images = workGallery(work);
+  const slides = workGallery(work);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -24,14 +24,14 @@ export function WorkDetail({ work, onClose }: WorkDetailProps) {
         onClose();
         return;
       }
-      if (images.length < 2) return;
-      if (event.key === "ArrowRight") setIndex((i) => (i + 1) % images.length);
-      if (event.key === "ArrowLeft") setIndex((i) => (i - 1 + images.length) % images.length);
+      if (slides.length < 2) return;
+      if (event.key === "ArrowRight") setIndex((i) => (i + 1) % slides.length);
+      if (event.key === "ArrowLeft") setIndex((i) => (i - 1 + slides.length) % slides.length);
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [images.length, onClose]);
+  }, [slides.length, onClose]);
 
   const paragraphs = workDescription(work).split("\n\n").filter(Boolean);
 
@@ -75,7 +75,7 @@ export function WorkDetail({ work, onClose }: WorkDetailProps) {
         </button>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <WorkGallery work={work} images={images} index={index} onIndexChange={setIndex} />
+          <WorkGallery work={work} slides={slides} index={index} onIndexChange={setIndex} />
 
           <div className="px-5 pb-6 pt-5 sm:px-7 sm:pb-7">
             <h2 className="font-pixel text-[24px] leading-[30px] text-primary sm:text-[30px] sm:leading-[36px]">

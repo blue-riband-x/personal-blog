@@ -85,6 +85,28 @@ export interface CaseStudy {
   note?: string;
 }
 
+/**
+ * 详情图区一张素材的朝向。
+ *
+ * 决定的不只是图片自己的比例，还有它在图区里占多宽 —— 所有卡片等高，
+ * 宽度按比例反推（16:10 约占 72% 宽，9:16 约占 25%）。
+ */
+export type WorkAspect = "wide" | "tall";
+
+/**
+ * `gallery` 的一项。
+ *
+ * 裸字符串就跟随作品的 `aspect`；写对象可以单独指定方向，
+ * 比如一组图里既有 16:9 的街景、又有 9:16 的海报。
+ */
+export type GalleryEntry = string | { src: string; aspect?: WorkAspect };
+
+/** 展开后的一项：图区只认这个形态 */
+export interface WorkSlide {
+  src: string;
+  aspect: WorkAspect;
+}
+
 export interface WorkItem {
   id: string;
   /** 作品名 */
@@ -95,16 +117,22 @@ export interface WorkItem {
   cover?: string;
   /** 占位图案的色相（0–360），没有封面时用来区分 */
   hue?: number;
-  /** 详情页轮播的图，一张以上；留空则退回封面 */
-  gallery?: string[];
+  /**
+   * 详情页轮播的图，一张以上；留空则退回封面。
+   * 每一项可以是裸路径，也可以是带 `aspect` 的对象（一横一竖混排时用）。
+   */
+  gallery?: GalleryEntry[];
   /** 详情页简介，段落之间空一行 */
   description?: string;
   /**
    * 详情图区的朝向，默认 `wide`（16:10 截图）。
    * 竖屏视频/竖幅海报写 `tall`，图区会换成 9:16 的立式卡片，
    * 素材按原比例铺满，不会被裁成一条。
+   *
+   * 它决定的是**框架**的形状，单张素材的方向由 `gallery` 项自己覆盖。
+   * 混排时按素材更多的那个方向选，不然框架的宽度装不下另一边。
    */
-  aspect?: "wide" | "tall";
+  aspect?: WorkAspect;
   /** 「立即体验」的目标地址；留空则该按钮不出现 */
   link?: string;
   /** 链接按钮的文案，默认「立即体验」 */
@@ -730,7 +758,23 @@ export const WORK_CATEGORIES: WorkCategory[] = [
           "画面是 AI 生成的动画风格，分镜、调色和剪辑是在生成之后自己接的：先把想要的三个瞬间分别生成，再按「远 — 近 — 远」的顺序剪，让 5 秒里有一次呼吸。\n\n" +
           "做竖屏是因为它本来就该在手机上竖着看 —— 详情页里这条会保持 9:16 原比例，两侧用虚化的画面补满，不裁掉任何一帧。",
       },
-      { id: "d1", title: "光污染海报", summary: "赛博色调的视觉实验", hue: 320 },
+      {
+        id: "light-pollution",
+        title: "光污染海报",
+        summary: "同一场霓虹夜雨的横竖双版 · 街心与路口",
+        hue: 320,
+        cover: MEDIA.design.lightPollution.wide,
+        // 横版在前：封面和第一张同比例，切到第二张才换成竖版
+        gallery: [
+          MEDIA.design.lightPollution.wide,
+          { src: MEDIA.design.lightPollution.tall, aspect: "tall" },
+        ],
+        meta: "2026 · 霓虹视觉实验 · 横版 16:9 / 竖版 9:16",
+        description:
+          "同一个夜晚、同一身衣服、同一片霓虹，拍成一横一竖两张。横版站在街心，两侧的广告牌全开，整条街的光都朝中间收；竖版撑伞走进路口，雨丝把招牌拉成一条条竖线。\n\n" +
+          "两张是分开构图的，不是把一张裁成另一种比例 —— 横版要有左右撑开的纵深，竖版则要让人物顶住画面中线、留出头顶霓虹的高度。同一套色只有三种：青、品红、荧光绿，多一种就俗了。\n\n" +
+          "湿地面是这套图的关键：所有颜色都要在积水里再出现一次，比空气里的光更脏、更散。所以画面里真正亮的不是灯，是灯掉在水上的那一片。",
+      },
       { id: "d2", title: "赛博名片", summary: "可交互的电子名片", hue: 260 },
       { id: "d3", title: "像素图标集", summary: "16×16 手绘图标 120 枚", hue: 175 },
       { id: "d4", title: "终端主题", summary: "终端配色的设计系统", hue: 130 },
@@ -762,9 +806,19 @@ export function pageItems(category: WorkCategory, page: number, pageSize = categ
  * 没有 `gallery` 就退回封面；两样都没有就返回空数组，
  * 由调用方渲染 `hue` 占位图案 —— 这样占位作品也能打开详情。
  */
-export function workGallery(work: WorkItem) {
-  if (work.gallery?.length) return work.gallery;
-  return work.cover ? [work.cover] : [];
+export function workGallery(work: WorkItem): WorkSlide[] {
+  const entries: GalleryEntry[] = work.gallery?.length
+    ? work.gallery
+    : work.cover
+      ? [work.cover]
+      : [];
+  const fallback = work.aspect ?? "wide";
+
+  return entries.map((entry) =>
+    typeof entry === "string"
+      ? { src: entry, aspect: fallback }
+      : { src: entry.src, aspect: entry.aspect ?? fallback },
+  );
 }
 
 /** 详情页的简介，没有就退回一句话说明 */

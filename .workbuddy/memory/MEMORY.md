@@ -75,15 +75,31 @@ push 后 1~2 分钟生效）。2026-10-16 由 VitePress 版重构而来，旧版
 （详情自己监听 Esc，外层要先判断 `detail` 再关分类）。详情 `key={work.id}`，换作品图片索引归零。
 **两个视图都在 `work.link` 存在时渲染「立即体验」**（档案页在 footer 第一个）。
 
+**档案正文是 `CaseBlocks.tsx` 按 `kind` 铺开的内容块**（`text` / `points` / `choices` / `figures` /
+`code` / `arch`），内容全在 `works.ts`；加项目只写数据，新块型才改渲染器。
+- `figures` 单图按 `size` 收窄：`wide` 通栏 / `compact` 680 / `square` 400 —— 界面截图通栏会把版面拉长，
+  方形素材（板书原图）通栏会占掉半屏。两张并排时**必须等高**（`aspect-[7/9]` + `object-top`），否则说明文字错位。
+- hero 图限高 `max-h-[min(46svh,420px)]` + `object-cover object-top`，否则 16:10 截图独占一整屏。
+- **`CaseBlocks` 不解析 Markdown**：正文里写 `**加粗**`、反引号会原样显示，只能是纯文本。
+- 档案页的截图素材放 `public/works/<项目>/`，用 ffmpeg 转 webp（1600 宽 q84 / 1400 宽 q82，单张 25–75KB）。
+
 - `WorkGallery` **不是轮播图**：每张图常驻同层，按离当前张的环形距离改
   `translateX/scale/opacity/blur`（`offsetOf()` 取最短距离，三张停在第 1 张时最后一张在左边）。
-- **中间那张的宽度占比是总开关**：邻居贴框架边缘被裁，露出恒等于 `(1-占比)/2`；
-  框架 `aspect = 图的宽高比 ÷ 占比`。桌面 72% → `22/10`，手机 88% → `20/11`（露 22px，试过 90% 只剩 18px 看不见）。
+- **卡片等高、宽度由素材自己的比例反推**：`h-[99%]`（竖框 92%）+ `aspect-[16/10] | aspect-[9/16]`，
+  横卡自然占 ~72% 宽、竖卡 ~25%，所以一组里混一横一竖也不会把竖图塞进矮框。
+  `gallery` 项写 `{ src, aspect: "tall" }` 单独指定方向，裸字符串跟随作品的 `aspect`。
+- **框架跟着当前那张走**（`slides[index].aspect`），不是跟着作品 —— 否则竖版海报在横框里只剩一条。
+  代价：横竖切换时框架高度瞬跳（`aspect-ratio` 不能补间），翻页动画本身够遮住。
+  混排时按素材更多的那个方向写 `work.aspect`，竖框里塞横卡会因 `max-w-[94%]` 被压变形。
+- **邻居位移是算出来的，不是写死的常量**：`(ar_c + ar_s) / (2·ar_s) - 0.05·ar_c/ar_s`，
+  相对邻居自身宽度的百分比 —— 两张卡中心距 = 两卡半宽之和，再钻 5% 到当前卡底下。
+  式子消掉了框架像素尺寸，774 宽和 368 宽都一样准，别再改回 `SIDE_SHIFT = 56 / 105`。
 - `CoverArt`（封面 / hue 占位）+ `Scanlines` 卡片与详情共用。按扩展名识别视频（复用 `AmbientVideo`）；
   `fit="cover"` 填满给卡片，`fit="contain"` 完整显示 + 同画面虚化垫底给详情。
-- **竖幅作品写 `aspect: "tall"`**：图区换 9:16 立式卡（手机 `min(44svh,340px)`、桌面 `min(56svh,460px)`），
-  **`SIDE_SHIFT` 必须同步改 105**（横图 56），否则邻居藏一半。页码放图区**下方**，否则压住画面主体。
-- `workGallery()` / `workDescription()` 兜底，占位作品也能开；`gallery` 里图片视频可混放。
+- **竖幅作品写 `aspect: "tall"`**：图区换 9:16 立式卡（手机 `min(44svh,340px)`、桌面 `min(56svh,460px)`）。
+  页码放图区**下方**，否则压住画面主体。
+- `workGallery()` 返回 `{ src, aspect }[]`（展开后的 `WorkSlide`），`workDescription()` 兜底；
+  `gallery` 里图片视频可混放，占位作品也能开。
 
 ## 视频与图片
 

@@ -39,5 +39,10 @@ export const MEDIA = {
       poster: oss("works/design/natsu-slope-poster.jpg"),
       stills: [oss("works/design/natsu-slope-01.jpg"), oss("works/design/natsu-slope-02.jpg")],
     },
+    /** 同一场景的横竖两版：横版 1280×720，竖版 720×1280 */
+    lightPollution: {
+      wide: oss("works/design/light-pollution-wide.webp"),
+      tall: oss("works/design/light-pollution-tall.webp"),
+    },
   },
 } as const;

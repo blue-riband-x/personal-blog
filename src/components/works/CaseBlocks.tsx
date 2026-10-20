@@ -166,7 +166,7 @@ function CaseCode({ title, body }: { title?: string; body: string }) {
           <span className="font-pixel text-[11px] leading-[16px] text-cyan-100/45">{title}</span>
         </div>
       )}
-      <pre className="overflow-x-auto px-3.5 py-3 text-[12px] leading-[20px] text-cyan-100/70">
+      <pre className="overflow-x-auto whitespace-pre-wrap break-words px-3.5 py-3 text-[12px] leading-[20px] text-cyan-100/70 sm:whitespace-pre">
         <code className="font-mono">{body}</code>
       </pre>
     </div>
