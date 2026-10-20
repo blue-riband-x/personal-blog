@@ -195,11 +195,14 @@ export const WORK_CATEGORIES: WorkCategory[] = [
         cover: "works/virtual-classroom/hero.webp",
         hue: 205,
         meta: "2026 · Vue 3 + Spring Boot + FastAPI",
+        link: "https://github.com/blue-riband-x/virtual-classroom",
+        linkLabel: "查看源码",
         description:
           "一个能自己「备课」的虚拟课堂：聊三个问题生成大纲，进课堂后 AI 教师逐字讲课、板书跟着翻页，讲完还能出题判卷。\n\n" +
           "架构上走了混合路线 —— Java Spring Boot 承担账号、大纲、排行榜，Python FastAPI 跑五个教学 Agent，前端只认一个域名。",
         caseStudy: {
           lede: "选一个主题，它给你排一份大纲，然后把这节课讲给你听 —— 讲稿逐字流出、板书一张张生成、讲完出题判卷。",
+          note: "没有线上地址：跑起来要三个服务加三套模型 Key，部署成本比演示价值高。源码开在 GitHub 上，README 里写了怎么在本机把三端拉起来。",
           role: "全栈开发 · 前端交互 / 服务端接口 / AI 流程编排",
           period: "2026 · 课程设计 / 个人项目",
           facts: [
@@ -213,7 +216,7 @@ export const WORK_CATEGORIES: WorkCategory[] = [
             "Pinia",
             "Three.js",
             "ECharts",
-            "Spring Boot 3",
+            "Spring Boot 4",
             "MyBatis",
             "MySQL 8",
             "FastAPI",
@@ -543,8 +546,6 @@ export const WORK_CATEGORIES: WorkCategory[] = [
               ],
             },
           ],
-          note:
-            "项目没有部署上线：它依赖三个本地服务（Vue / Spring Boot / FastAPI）和多个付费模型额度，直接放到公网既不安全也跑不动，所以只保留源码与演示录屏，详情里的截图全部来自本地开发环境实跑。",
         },
       },
     ],

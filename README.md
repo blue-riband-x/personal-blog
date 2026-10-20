@@ -13,7 +13,7 @@
 | --- | --- | --- |
 | 音乐盒子 | https://blue-riband-x.github.io/music-play/ | Web Audio 的本地音乐播放器 |
 | 击穿霓虹街头 | https://blue-riband-x.github.io/neon-street-breaker/ | Godot 4 像素清版格斗，Web 导出 |
-| AI 虚拟课堂 | — | 未部署，源码在本机；作品页里有完整的项目档案 |
+| AI 虚拟课堂 | https://github.com/blue-riband-x/virtual-classroom | 未部署；Vue 3 + Spring Boot + FastAPI 三端，源码与说明在 GitHub |
 
 ## 页面
 
