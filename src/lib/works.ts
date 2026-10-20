@@ -46,9 +46,10 @@ export interface CaseTier {
  * 单张截图的宽度。
  *
  * `wide` 是通栏（界面截图，宽一点才看得清字）；
- * `square` 收窄居中（方形素材比如板书原图，通栏会高得吓人）。
+ * `compact` 收窄到 560（配角截图，全宽会把版面拉得很长）；
+ * `square` 再窄到 400（方形素材比如板书原图，通栏会高得吓人）。
  */
-export type FigureSize = "wide" | "square";
+export type FigureSize = "wide" | "compact" | "square";
 
 export interface CaseSection {
   /** 锚点 id，也用于目录高亮 */
@@ -414,6 +415,7 @@ export const WORK_CATEGORIES: WorkCategory[] = [
                     {
                       src: "works/virtual-classroom/home.webp",
                       caption: "首页：Three.js 渲染的形象，空闲时每 4 秒眨一次眼；XP、连续天数都由 store 驱动",
+                      size: "compact",
                     },
                   ],
                 },
@@ -423,6 +425,7 @@ export const WORK_CATEGORIES: WorkCategory[] = [
                     {
                       src: "works/virtual-classroom/report.webp",
                       caption: "学习报告：Grader 的四维评分折算成知识点掌握度，用雷达图看短板",
+                      size: "compact",
                     },
                   ],
                 },
@@ -474,6 +477,16 @@ export const WORK_CATEGORIES: WorkCategory[] = [
                   kind: "text",
                   body:
                     "现在这条链路是通的：注册登录 → 聊出大纲 → 进课堂听课（流式讲稿 + AI 板书 + 语音）→ 答题判分 → 看报告和排行榜。三个服务本地并行（前端 8080 / Java 8081 / Python 8000），MySQL 十一张表，向量库一个集合。",
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/virtual-classroom/leaderboard.webp",
+                      caption: "排行榜：按 XP、本周增量、连续天数、知识掌握度四个维度切换",
+                      size: "compact",
+                    },
+                  ],
                 },
                 {
                   kind: "points",

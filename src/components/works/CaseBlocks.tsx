@@ -106,7 +106,7 @@ function CaseChoices({ items }: { items: { pick: string; why: string; alt?: stri
  * - 通栏不裁切，保持原比例（界面截图裁了就少一块）；
  * - 并排时两栏等高，用 `aspect-[7/9]` + `object-top` 对齐 —— 否则两张图差几十像素，
  *   下面的说明文字跟着错位，看着像没对齐的相册；
- * - `size: "square"` 的单图收窄居中，方形素材通栏会有半屏高。
+ * - 单图按 `size` 收窄：`square` 400 / `compact` 560，方形和配角截图通栏都会占掉半屏。
  */
 function CaseFigures({ items }: { items: { src: string; caption: string; size?: FigureSize }[] }) {
   const paired = items.length > 1;
@@ -114,7 +114,7 @@ function CaseFigures({ items }: { items: { src: string; caption: string; size?: 
   return (
     <div className={paired ? "grid items-start gap-3 sm:grid-cols-2" : ""}>
       {items.map((item) => (
-        <figure key={item.src} className={!paired && item.size === "square" ? "mx-auto w-full max-w-[400px]" : ""}>
+        <figure key={item.src} className={paired ? "" : SINGLE_WIDTH[item.size ?? "wide"]}>
           <div
             className={[
               "relative overflow-hidden border-2 border-cyan-200/30 bg-[#03080f]",
@@ -144,6 +144,13 @@ function CaseFigures({ items }: { items: { src: string; caption: string; size?: 
     </div>
   );
 }
+
+/** 单图的宽度档位：通栏 / 680 / 400，居中 */
+const SINGLE_WIDTH = {
+  wide: "",
+  compact: "mx-auto w-full max-w-[680px]",
+  square: "mx-auto w-full max-w-[400px]",
+} as const;
 
 /**
  * 代码 / 协议样例。
