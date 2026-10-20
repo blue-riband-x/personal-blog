@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery } from "../../lib/use-media-query";
 import { WORK_CATEGORIES, pageCount, pageItems, type WorkItem } from "../../lib/works";
+import { CaseStudy } from "./CaseStudy";
 import { ENTER, PixelIcon } from "./PixelIcon";
 import { WorkCard, WorkCardSpacer } from "./WorkCard";
 import { WorkDetail } from "./WorkDetail";
@@ -245,7 +246,11 @@ export function WorksShowcase() {
       </div>
 
       {/* key 用 id：换一个作品时组件重建，图片自然回到第一张 */}
-      {detail && <WorkDetail key={detail.id} work={detail} onClose={closeDetail} />}
+      {detail?.caseStudy ? (
+        <CaseStudy key={detail.id} work={detail} study={detail.caseStudy} onClose={closeDetail} />
+      ) : detail ? (
+        <WorkDetail key={detail.id} work={detail} onClose={closeDetail} />
+      ) : null}
     </div>
   );
 }

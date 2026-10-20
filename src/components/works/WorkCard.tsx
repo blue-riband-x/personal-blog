@@ -70,6 +70,16 @@ export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) 
           )}
 
           {/*
+            有项目档案的作品点开是整屏拆解，不是小浮层。
+            先在卡片上标出来，别让人点进去才发现内容量不一样。
+          */}
+          {work.caseStudy && (
+            <span className="font-pixel absolute left-3 top-2 z-[1] border border-primary/45 bg-[#01080e]/85 px-1.5 py-1 text-[10px] leading-[12px] text-primary backdrop-blur-[4px]">
+              深度拆解
+            </span>
+          )}
+
+          {/*
             摘要：桌面端悬停才浮上来；触屏没有 hover，就一直显示，
             否则这段内容在手机上等于被藏掉了。
           */}
