@@ -154,6 +154,13 @@ export interface WorkCategory {
   pageSize: number;
   /** 桌面端网格列数 */
   columns: 2 | 3;
+  /**
+   * 作品图上盖不盖扫描线（像素风舞台的一部分）。
+   *
+   * 默认盖 —— 开发项目和游戏本来就是这个调性。创意设计要看素材本色，
+   * 置 `false` 让图和视频原样呈现，只留边框。
+   */
+  scanlines?: boolean;
   items: WorkItem[];
 }
 
@@ -739,6 +746,8 @@ export const WORK_CATEGORIES: WorkCategory[] = [
     label: "创意设计",
     pageSize: 6,
     columns: 3,
+    // 图就是作品本身，别再压一层扫描线
+    scanlines: false,
     items: [
       {
         id: "natsu-slope",

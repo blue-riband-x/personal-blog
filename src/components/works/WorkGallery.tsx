@@ -52,6 +52,8 @@ interface WorkGalleryProps {
   slides: WorkSlide[];
   /** 当前第几张（受控 —— 交给 WorkDetail 统一接管键盘左右键） */
   index: number;
+  /** 图卡上要不要扫描线，见 `WorkCategory.scanlines` */
+  scanlines?: boolean;
   onIndexChange: (index: number) => void;
 }
 
@@ -66,7 +68,13 @@ interface WorkGalleryProps {
  * 每张卡片的高度统一、宽度由**素材自己的比例**推算，所以一组里混着
  * 16:9 街景和 9:16 海报时，两张卡是等高不同宽，谁都不会被塞进不合适的框里。
  */
-export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryProps) {
+export function WorkGallery({
+  work,
+  slides,
+  index,
+  scanlines = true,
+  onIndexChange,
+}: WorkGalleryProps) {
   const total = slides.length;
   // 框架跟着**当前这张**走，而不是跟着作品 —— 一横一竖混排时，
   // 竖版海报能占满整个框，不会被塞进横向的矮框里缩成一条。
@@ -77,7 +85,7 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
     return (
       <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-cyan-200/25 bg-[#03080f]/60">
         <CoverArt work={work} />
-        <Scanlines />
+        {scanlines && <Scanlines />}
       </div>
     );
   }
@@ -140,7 +148,7 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
               }}
             >
               <CoverArt work={work} src={slide.src} fit="contain" />
-              <Scanlines />
+              {scanlines && <Scanlines />}
             </button>
           );
         })}
@@ -158,7 +166,7 @@ export function WorkGallery({ work, slides, index, onIndexChange }: WorkGalleryP
             }}
           >
             <CoverArt work={work} src={mirror.src} fit="contain" />
-            <Scanlines />
+            {scanlines && <Scanlines />}
           </div>
         )}
 

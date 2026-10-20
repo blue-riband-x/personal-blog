@@ -5,6 +5,8 @@ import { WorkGallery } from "./WorkGallery";
 
 interface WorkDetailProps {
   work: WorkItem;
+  /** 图区要不要扫描线，见 `WorkCategory.scanlines` */
+  scanlines?: boolean;
   onClose: () => void;
 }
 
@@ -14,7 +16,7 @@ interface WorkDetailProps {
  * 上图片、下文字、最下面「立即体验」。调用方用 `key={work.id}` 挂载，
  * 所以换一个作品时组件会重建，图片索引自动回到第一张，不用手动重置。
  */
-export function WorkDetail({ work, onClose }: WorkDetailProps) {
+export function WorkDetail({ work, scanlines = true, onClose }: WorkDetailProps) {
   const slides = workGallery(work);
   const [index, setIndex] = useState(0);
 
@@ -75,7 +77,13 @@ export function WorkDetail({ work, onClose }: WorkDetailProps) {
         </button>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
-          <WorkGallery work={work} slides={slides} index={index} onIndexChange={setIndex} />
+          <WorkGallery
+            work={work}
+            slides={slides}
+            index={index}
+            scanlines={scanlines}
+            onIndexChange={setIndex}
+          />
 
           <div className="px-5 pb-6 pt-5 sm:px-7 sm:pb-7">
             <h2 className="font-pixel text-[24px] leading-[30px] text-primary sm:text-[30px] sm:leading-[36px]">

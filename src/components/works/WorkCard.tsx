@@ -19,6 +19,8 @@ interface WorkCardProps {
   index: number;
   /** 大卡片（每页 2 个那个）字号大一点 */
   large?: boolean;
+  /** 封面上要不要扫描线，见 `WorkCategory.scanlines` */
+  scanlines?: boolean;
   /** 点开详情；不传则卡片不可点 */
   onOpen?: (work: WorkItem) => void;
 }
@@ -34,7 +36,7 @@ interface WorkCardProps {
  * 整张卡片的点击区是一层铺满的透明 `<button>`，而不是把 `<article>` 改成按钮 ——
  * 这样标题还能是 `<h3>`，屏幕阅读器和 SEO 都不吃亏。
  */
-export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) {
+export function WorkCard({ work, index, large = false, scanlines = true, onOpen }: WorkCardProps) {
   // 详情里含视频就打个角标，让人知道点进去是会动的
   const hasVideo = workGallery(work).some((slide) => isVideoSource(slide.src));
 
@@ -55,7 +57,7 @@ export function WorkCard({ work, index, large = false, onOpen }: WorkCardProps) 
         {/* 封面 */}
         <div className={COVER_BOX}>
           <CoverArt work={work} />
-          <Scanlines />
+          {scanlines && <Scanlines />}
 
           {/* 四角像素标记 */}
           <span aria-hidden="true" className="absolute left-1.5 top-1.5 h-1.5 w-1.5 bg-cyan-200/50 transition-colors group-can-hover:bg-primary" />

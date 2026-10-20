@@ -79,6 +79,8 @@ export function WorksShowcase() {
   }, [activeId, detail, close]);
 
   const activeTop = isDesktop ? ACTIVE_TOP_DESKTOP : ACTIVE_TOP_MOBILE;
+  // 分类可以关掉图上的扫描线（创意设计要看素材本色），默认是开着的
+  const scanlines = active?.scanlines !== false;
 
   return (
     <div className="absolute inset-0">
@@ -183,6 +185,7 @@ export function WorksShowcase() {
                       work={work}
                       index={index}
                       large={active.columns === 2}
+                      scanlines={scanlines}
                       onOpen={setDetail}
                     />
                   ))}
@@ -249,7 +252,7 @@ export function WorksShowcase() {
       {detail?.caseStudy ? (
         <CaseStudy key={detail.id} work={detail} study={detail.caseStudy} onClose={closeDetail} />
       ) : detail ? (
-        <WorkDetail key={detail.id} work={detail} onClose={closeDetail} />
+        <WorkDetail key={detail.id} work={detail} scanlines={scanlines} onClose={closeDetail} />
       ) : null}
     </div>
   );
