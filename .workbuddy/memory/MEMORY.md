@@ -143,6 +143,11 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
 
 ## 关联作品（不在本仓库）
 
+- **AI 虚拟课堂**（`D:\code\VirtualClassroom`）：两个远端 —— `origin` = Gitee
+  `rriicckkyy/virtual-classroom`，`github` = https://github.com/blue-riband-x/virtual-classroom
+  （默认分支 **master**，与 Gitee 共用一条历史，推 GitHub 用 `git push github master`）。
+  作品档案里用 `link` + `linkLabel: "查看源码"` 指向它；`model_3D/`、`backend/static/boards/`（7MB 产物）、
+  日志、`.env` 都在 `.gitignore` 里，仓库只有源码 + 3 张 README 截图（~190KB）。
 - 音乐盒子 `blue-riband-x/music-play` → https://blue-riband-x.github.io/music-play/
 - 击穿霓虹街头（Godot 4.7 像素清版）`blue-riband-x/neon-street-breaker`
   → https://blue-riband-x.github.io/neon-street-breaker/ ；源码本机 `D:\coding\battle`，
