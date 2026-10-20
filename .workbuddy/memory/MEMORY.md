@@ -90,6 +90,8 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
   不补就只有一侧有虚化邻居、构图偏；3 张以上天然两侧都有。
 - `CoverArt`（封面 / hue 占位）+ `Scanlines` 卡片与详情共用；按扩展名识别视频（复用 `AmbientVideo`），
   `fit="cover"` 填卡、`fit="contain"` 完整显示 + 同画面虚化垫底给详情。
+- **扫描线是分类级开关**：`WorkCategory.scanlines`（默认盖），创意设计置 `false` 让素材原样呈现；
+  `WorksShowcase` 算一次再透传 `WorkCard` / `WorkDetail` → `WorkGallery`，别逐条作品加字段。
 - **竖幅作品写 `aspect: "tall"`**：9:16 立式（手机 `min(44svh,340px)`、桌面 `min(56svh,460px)`），
   页码放图区**下方**，否则压住画面主体。
 - `workGallery()` 展开成 `WorkSlide[]`，`workDescription()` 兜底，占位作品也能开详情；图片视频可混放。
