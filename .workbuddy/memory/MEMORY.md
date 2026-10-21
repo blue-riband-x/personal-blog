@@ -143,6 +143,10 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
 
 ## 关联作品（不在本仓库）
 
+- **TestHub 测试平台**（`D:\code\AITestPlatform\Ai_Testhub`）：Django 4.2 + Vue 3 的测试管理平台，
+  15 个 app / 114 张表 / 51 个数据工厂工具；仓库 `blue-riband-x/testhub-platform`（**私有，只做备份**），
+  博客档案**不挂链接、不提供立即体验**（只有本地部署）。本地入口：前端 3000 / 后端 8000，
+  `admin / Admin@123456`，MySQL80 root/root 库 `testhub`；演示数据用 `scripts/seed_demo.py` 灌。
 - **AI 虚拟课堂**（`D:\code\VirtualClassroom`）：两个远端 —— `origin` = Gitee
   `rriicckkyy/virtual-classroom`，`github` = https://github.com/blue-riband-x/virtual-classroom
   （默认分支 **master**，与 Gitee 共用一条历史，推 GitHub 用 `git push github master`）。

@@ -188,9 +188,9 @@ export const WORK_CATEGORIES: WorkCategory[] = [
           "把散在 Excel、Postman、Selenium 脚本和 Allure 报告里的测试工作收进同一条流水线：需求文档进来，AI 拆出业务需求并生成用例，人评审通过后排进测试计划、执行、出报告。\n\n" +
           "后端 Django + DRF，15 个业务应用、114 张表；前端 Vue 3 + Element Plus。接口测试能真实发请求并留历史，UI 自动化支持 Selenium / Playwright 双引擎与 browser-use 的 AI 智能模式，APP 走 Airtest。",
         caseStudy: {
-          lede: "测试的麻烦不在某一步，而在步与步之间。这个平台把需求、用例、评审、执行、报告放进同一个库，让一条用例能从需求一路走到报告。",
+          lede: "一个 Django 写的测试管理平台：需求文档丢进去，拆成业务需求和功能点，写成用例，过评审，进测试计划，执行，出报告。接口、Web UI、Android 三种自动化在同一个库里跑，明细统一进 Allure。",
           role: "独立开发 · 后端模型与接口 / 前端工作台 / 执行引擎接入",
-          period: "2026 · 个人项目 / 本地部署",
+          period: "2026 · 个人项目",
           facts: [
             { value: "15", label: "Django 应用" },
             { value: "4.6 万", label: "行后端代码" },
@@ -223,85 +223,210 @@ export const WORK_CATEGORIES: WorkCategory[] = [
           },
           sections: [
             {
-              id: "brief",
-              kicker: "THE PROBLEM",
-              title: "想解决的问题",
+              id: "path",
+              kicker: "THE PATH",
+              title: "需求文档进来，测试报告出去",
               blocks: [
                 {
                   kind: "text",
                   body:
-                    "做的第一版只有「用例管理」—— 建项目、写用例、导出 Excel。真正用起来才发现，痛点根本不在写用例这件事上：需求在文档里，用例在表格里，接口调试在另一个工具里，UI 脚本散在几个人本地，最后报告还得手工截图整理。\n\n" +
-                    "所以第二版把链路补完整了：需求文档上传 → AI 拆出业务需求与功能点 → 生成带前置条件、步骤、预期结果的用例 → 评审 → 挂进测试计划 → 执行 → 统计进报告。每一环都落在同一个库里，用例只有一份，不是每个模块各存一个副本。",
+                    "做测试的日常大概是一串这样的动作：需求评审时在文档里圈重点，散会后把功能点抄进 Excel 写成用例，接口拿 Postman 点，Web 写 Selenium 脚本，Android 换 Airtest，跑完把截图贴进 Word 交上去。每一步都不难，难的是串起来 —— 同一个功能点，在文档、用例表、脚本、报告里各有一份说法，需求一变要改四处，还得靠人记着哪份是新的。\n\n" +
+                    "这个平台不是给每一步单独做个界面，而是让五道门的产物落进同一个库：需求拆出来的功能点能直接生成用例，用例过了评审才能进计划，计划跑完的结果直接算成报告，中间没有导出再导入这一步。",
+                },
+                {
+                  kind: "arch",
+                  caption: "五道门：每一道的产物都落在同一套表里，下一道门直接取上一道门的结果",
+                  tiers: [
+                    {
+                      label: "需求",
+                      nodes: [
+                        { name: "文档上传", note: "docx / pdf / md" },
+                        { name: "业务需求", note: "拆成条目" },
+                        { name: "功能点", note: "可测的粒度" },
+                      ],
+                    },
+                    {
+                      label: "用例",
+                      nodes: [
+                        { name: "用例草稿", note: "生成或手写" },
+                        { name: "步骤 · 预期", note: "子表，有序" },
+                        { name: "版本 · 优先级", note: "同一张表筛" },
+                      ],
+                    },
+                    {
+                      label: "评审",
+                      nodes: [
+                        { name: "三级意见", note: "整体 / 用例 / 步骤" },
+                        { name: "检查清单", note: "模板化" },
+                        { name: "通过 · 打回", note: "状态流转" },
+                      ],
+                    },
+                    {
+                      label: "执行",
+                      nodes: [
+                        { name: "测试计划", note: "挑用例组轮次" },
+                        { name: "接口 · UI · APP", note: "三种驱动" },
+                        { name: "手动 · 定时", note: "APScheduler" },
+                      ],
+                    },
+                    {
+                      label: "报告",
+                      nodes: [
+                        { name: "通过率 · 趋势", note: "从执行记录算" },
+                        { name: "失败 TOP", note: "按用例聚合" },
+                        { name: "Allure 明细", note: "堆栈 + 截图" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/cases.webp",
+                      caption: "测试用例：一个项目下按版本、优先级、类型筛选，右侧直接改状态或删除，全库只有这一份",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "spine",
+              kicker: "SINGLE SOURCE",
+              title: "所有东西都挂在同一条用例上",
+              blocks: [
+                {
+                  kind: "text",
+                  body:
+                    "库里 114 张表，被引用得最多的是测试用例。步骤是它的子表，评审意见指向它的某一版，测试计划把它挑进轮次，执行记录记下它跑成了什么，报告从执行记录往上算。所以「这条用例上次是怎么挂的」永远查得到，不用翻聊天记录，也不用指望谁手里还留着当时那份表格。",
                 },
                 {
                   kind: "points",
                   items: [
                     {
-                      title: "AI 只掐最费人的那一段",
-                      body: "没给全流程套聊天框。模型只做一件事：把需求文档读成结构化的功能点，再按功能点写出用例草稿。生成完必须过人评审才能进计划 —— 人始终在环里，而不是让模型直接决定测什么。",
+                      title: "评审不生成副本",
+                      body: "整体、用例、步骤三层意见都挂在原用例上，状态从待评审到评审中再到通过或打回。改完再提交，评审看到的是同一页的新版本，而不是一份叫「xxx_v2」的新文件。",
                     },
                     {
-                      title: "接口、UI、APP 都是「可执行单元」",
-                      body: "三种自动化在系统里是同一种东西的不同驱动：都产出执行记录、都能挂定时任务、都写 Allure。所以报告页不需要为每个引擎单独做一套统计。",
+                      title: "意见能落到某一步",
+                      body: "不是只能对整条用例说「再改改」：第 3 步的预期结果写错了，就在第 3 步下面提。改的人打开就知道具体是哪一行有问题。",
                     },
                     {
-                      title: "配置是前置条件，不是隐藏开关",
-                      body: "没配模型 Key 时，用例生成页会先弹一张检查表：模型、提示词、生成行为三项缺一项就不放行，点「去配置」直接跳过去。比让人点进去等一个报错要好。",
+                      title: "计划挑的是用例，不是表格",
+                      body: "排计划时直接从库里勾用例，勾一次就建立了引用。这和「导一份 Excel 进计划」是相反的取舍 —— 换来的是不用维护两份，代价是用例改动会立刻影响还没跑完的计划。",
+                    },
+                    {
+                      title: "版本是筛选维度，不是新目录",
+                      body: "项目下按版本归档用例，切版本只是换一个筛选条件，不用换页面，也不用重新导入一份数据。",
+                    },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/review.webp",
+                      caption: "用例评审：评审进度、评审人与待评审数量一屏看完，意见按用例和步骤分层挂",
                     },
                   ],
                 },
               ],
             },
             {
-              id: "design",
-              kicker: "TRADE-OFFS",
-              title: "技术选型：为什么是这套",
+              id: "engines",
+              kicker: "ONE SHAPE",
+              title: "接口、UI、APP，在系统里长得一样",
               blocks: [
                 {
                   kind: "text",
                   body:
-                    "所有选择都围绕一个前提：这套东西要在一台机器上跑起来，还要能被一个人维护。",
+                    "这三件事平时是三套工具：接口用 Postman 或 JMeter，Web 用 Selenium 或 Playwright，Android 用 Airtest，报告各出一份。在这里它们被压成同一种东西 —— 可执行单元：都要有前置（环境、账号、测试数据），都要产出执行记录，都能挂定时任务，都写 Allure。所以执行中心不分「接口的任务」和「UI 的任务」，报告页也不用为每个引擎单独做一套统计。\n\n" +
+                    "代价是抽象层必须够薄：执行器拿到的都是一份任务描述（引擎、目标、参数、超时），各引擎自己解释。再厚一点，就会变成每接一个引擎都要改一遍框架。",
                 },
                 {
-                  kind: "choices",
+                  kind: "points",
                   items: [
                     {
-                      pick: "Django + DRF 单后端",
-                      why: "15 个业务域正好对上 Django 的 app 结构：用户、项目、用例、评审、执行、报告、数据工厂各占一个 app，模型、迁移、Admin、权限都是现成的；DRF 负责序列化，drf-spectacular 直接把 Swagger 和 ReDoc 生成出来。",
-                      alt: "全 Node：接口与 UI 自动化要驱动浏览器和 ADB，Playwright、Airtest、browser-use 的生态都在 Python 这边，硬换等于给每个引擎包一层服务。",
+                      title: "元素库存「怎么找到它」，脚本存「先点谁」",
+                      body: "一个元素绑定定位策略、所属页面和等待超时，策略有 12 种（CSS / XPath / text / role / test-id …）。页面改版时改元素库就够了，脚本不动。第一版是把选择器写死在脚本里，改一个按钮要翻十几个文件。",
                     },
                     {
-                      pick: "Vue 3 + Element Plus",
-                      why: "后台系统的工作量集中在表格、表单、树、弹窗，Element Plus 把这部分铺得很快；Monaco 接进来就是脚本编辑器，ECharts 接进来就是报告图表。",
-                      alt: "React + Antd：生态一样成熟，但这个项目大量树形结构（项目 / 集合 / 元素分组），Element 的默认交互更接近国内后台的使用习惯。",
+                      title: "APP 流程是 JSON，不是 Python",
+                      body: "Airtest 的动作被抽成 UI Flow：一步是 {动作, 目标, 参数}，覆盖十多种操作；变量分 global / local / outputs 三个作用域，步骤之间用 {{变量}} 引用。编排好的组件能打包导出，换个项目导入就能跑。",
                     },
                     {
-                      pick: "JWT 双 Token + 黑名单",
-                      why: "access 30 分钟、refresh 7 天，刷新时轮换并把旧的 refresh 拉黑；前端在 access 过期前 5 分钟自动续期，续期期间的请求进队列等着，不丢请求也不弹登录框。",
-                      alt: "Session：多端登录和脚本化调用（CI 里跑套件）都要额外处理，JWT 天然适合这种「后端只验签」的场景。",
+                      title: "接口测试没有另做发送器",
+                      body: "复用同一份请求模型 —— 集合是树，请求是叶子，环境变量用 {{}} 占位，执行结果写进历史。好处是断言、前置脚本、后置脚本只有一处实现；坏处是早期把 headers 和 body 都定成了自由 JSON，后面加字段只能靠约定，约束不住。",
                     },
                     {
-                      pick: "browser-use 做 AI 智能模式",
-                      why: "元素定位的脚本是「选择器 + 步骤」，页面一改就废。AI 智能模式换了思路：给目标和页面，让模型自己决定点哪里。文本模式走 DOM 解析，视觉模式走截图识别。",
-                      alt: "继续堆元素库：稳，但维护成本随页面变化线性增长，而且换个人接手就看不懂脚本在干什么。",
+                      title: "AI 智能模式是第四种驱动",
+                      body: "前三种靠选择器，这一种把目标和当前页面交给模型，让它自己决定点哪里：文本模式解析 DOM，视觉模式看截图。元素定位从「写死一条路径」变成「说清楚要干什么」。",
                     },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
                     {
-                      pick: "Allure 出报告",
-                      why: "自己画一套报告不值当，测试岗位认的就是 Allure 的形态：用例级明细、失败堆栈、附件截图。pytest 侧产出 results 目录，后端转成静态站点挂出来。代价是机器上得有 Java。",
-                      alt: "自己写统计页：图表能画，但历史趋势、用例级明细、附件这些全得自己补。",
+                      src: "works/testhub/elements.webp",
+                      caption: "元素管理：定位策略、所属页面、等待超时都配在元素上，UI 脚本只引用元素名",
+                    },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/api-history.webp",
+                      caption: "请求历史：每次执行的请求、状态码、响应时间都留档，失败的那条能直接重发",
                     },
                   ],
                 },
               ],
             },
             {
-              id: "arch",
-              kicker: "ARCHITECTURE",
-              title: "系统怎么连起来",
+              id: "ai",
+              kicker: "HUMAN IN THE LOOP",
+              title: "AI 只领最费人的那一段",
               blocks: [
                 {
+                  kind: "text",
+                  body:
+                    "整条链上最费人的不是执行，是把需求文档读成一条条能测的东西。一份三四十页的需求，人工拆完、再写成带前置条件和预期结果的用例，一两天就过去了。所以模型只做这段：把文档拆成业务需求和功能点，再按功能点产出用例草稿。\n\n" +
+                    "其余环节没有硬塞聊天框。写用例、调接口、编脚本这些事，熟练的人比模型快，也更清楚该往哪里捅，套一层对话反而多绕一圈。",
+                },
+                {
+                  kind: "points",
+                  items: [
+                    {
+                      title: "生成完必须过评审",
+                      body: "模型产出的是草稿，不是结论。评审在流程上是必经的一关，不是可选的礼貌 —— 只有通过评审的用例才会出现在测试计划里，人始终在环里。",
+                    },
+                    {
+                      title: "缺配置就先说清楚",
+                      body: "没填模型 Key 时，生成页先弹一张检查表：模型、提示词、生成行为三项缺一项就不放行，点「去配置」直接跳到对应页面。比让人点进去等一个报错好。",
+                    },
+                    {
+                      title: "模型是配置项，不是写死的",
+                      body: "默认 DeepSeek，通义和硅基流动都能接；换模型只改配置，不碰生成逻辑的代码。",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "scale",
+              kicker: "UNDER THE HOOD",
+              title: "十五个应用，一个人维护",
+              blocks: [
+                {
+                  kind: "text",
+                  body:
+                    "这套东西一个人写、一个人改，结构上只做两件事：按业务域切 app，让每次改动基本落在一个目录里；能借现成的不自己造，Admin、迁移、权限、Swagger、报告全交给框架和生态。",
+                },
+                {
                   kind: "arch",
-                  caption: "五层结构：前端只调一套 REST，执行层按引擎分派，外部模型和通知都是可选件",
+                  caption: "系统骨架：前端只调一套 REST，执行层按引擎分派，外部模型和通知都是可选件",
                   tiers: [
                     {
                       label: "前端",
@@ -352,169 +477,35 @@ export const WORK_CATEGORIES: WorkCategory[] = [
                   ],
                 },
                 {
-                  kind: "code",
-                  title: "backend/settings.py —— 双 Token 的几条关键配置",
-                  body:
-                    "SIMPLE_JWT = {\n" +
-                    "    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),\n" +
-                    "    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),\n" +
-                    "    'ROTATE_REFRESH_TOKENS': True,     # 每次刷新都换一个新的 refresh\n" +
-                    "    'BLACKLIST_AFTER_ROTATION': True,  # 旧的进黑名单，防重放\n" +
-                    "    'UPDATE_LAST_LOGIN': True,\n" +
-                    "    'ALGORITHM': 'HS256',\n" +
-                    "    'AUTH_HEADER_TYPES': ('Bearer',),\n" +
-                    "}\n",
-                },
-                {
-                  kind: "figures",
+                  kind: "choices",
                   items: [
                     {
-                      src: "works/testhub/cases.webp",
-                      caption: "测试用例：一个项目下按版本、优先级、类型筛选，右侧直接改状态或删除，用例只有这一份",
+                      pick: "Django + DRF 单后端",
+                      why: "15 个业务域正好对上 app 结构：用户、项目、用例、评审、执行、报告、数据工厂各占一个，模型、迁移、Admin、权限都是现成的；drf-spectacular 把 Swagger 和 ReDoc 直接生成出来。",
+                      alt: "全 Node：接口和 UI 自动化要驱动浏览器和 ADB，Playwright、Airtest、browser-use 的生态都在 Python 这边，硬换等于给每个引擎包一层服务。",
+                    },
+                    {
+                      pick: "Vue 3 + Element Plus",
+                      why: "后台的工作量集中在表格、表单、树和弹窗，Element 把这部分铺得最快；Monaco 接进来就是脚本编辑器，ECharts 接进来就是报告图表。",
+                      alt: "React + Antd：生态一样成熟，但这个项目树形结构特别多（项目 / 集合 / 元素分组），Element 的默认交互更贴国内后台的用法。",
+                    },
+                    {
+                      pick: "Allure 出报告",
+                      why: "自己画一套报告不值当。测试岗认的就是 Allure 的形态：用例级明细、失败堆栈、附件截图；pytest 侧出 results 目录，后端转成静态站点挂出来。",
+                      alt: "自己写统计页：图能画，但历史趋势、用例级明细、附件全要自己补。代价是机器上得有 Java。",
                     },
                   ],
                 },
-              ],
-            },
-            {
-              id: "impl",
-              kicker: "IMPLEMENTATION",
-              title: "关键实现",
-              blocks: [
                 {
                   kind: "points",
                   items: [
                     {
-                      title: "前端无感续期：请求排队而不是踢人",
-                      body: "请求拦截器先算 access 还剩多久，只剩 5 分钟就用 refresh 换新的；同时把后续请求压进队列，等刷新完成再统一放出去。只有刷新本身失败才登出 —— 一个 401 就把人踢下线，是后台系统最招骂的交互。",
-                    },
-                    {
-                      title: "APP 自动化用 JSON 编排流程",
-                      body: "Airtest 的动作被抽成 UI Flow：每一步是 {动作, 目标, 参数}，覆盖十多种操作；变量分 global / local / outputs 三个作用域，步骤之间用 {{variable}} 引用。组件可以打包导出，换个项目导入就能用。",
+                      title: "access 过期前 5 分钟就开始换",
+                      body: "JWT 双 Token：access 30 分钟、refresh 7 天，刷新时轮换并把旧的拉黑。前端在 access 只剩 5 分钟时就续期，续期期间的请求进队列等着 —— 一个 401 就把人踢下线，是后台系统最招骂的交互。",
                     },
                     {
                       title: "51 个工具走同一个执行入口",
-                      body: "字符、编码、随机、加密、测试数据、JSON、Crontab 七类工具，入参出参都是 JSON，结果落库并打标签。接口测试的请求参数、UI 测试的输入步骤可以直接引用带标签的数据，不用手工复制粘贴。",
-                    },
-                    {
-                      title: "评审意见能落到步骤级",
-                      body: "整体意见、用例意见、步骤意见三层都能提，配检查清单和评审模板；状态从待评审到评审中再到通过 / 拒绝。意见挂在原用例上，不做副本，改一次只改一处。",
-                    },
-                  ],
-                },
-                {
-                  kind: "figures",
-                  items: [
-                    {
-                      src: "works/testhub/review.webp",
-                      caption: "用例评审：评审进度、评审人与待评审数量一屏看完，意见按用例和步骤分层挂",
-                    },
-                  ],
-                },
-                {
-                  kind: "figures",
-                  items: [
-                    {
-                      src: "works/testhub/api-history.webp",
-                      caption: "请求历史：每次执行的请求、状态码、响应时间都留档，失败的那条能直接重发",
-                    },
-                  ],
-                },
-                {
-                  kind: "text",
-                  body:
-                    "接口测试没有另做一套「发送器」，而是复用同一份请求模型：集合是树，请求是叶子，环境变量用 {{}} 占位，执行结果写请求历史。好处是断言、前置脚本、后置脚本都只有一处实现，坏处是早期的数据结构定得太宽松（headers 和 body 都是 JSONField），后面加字段时得靠约定而不是约束。",
-                },
-                {
-                  kind: "figures",
-                  items: [
-                    {
-                      src: "works/testhub/elements.webp",
-                      caption: "元素管理：一个元素绑定定位策略、所属页面与等待超时，UI 脚本只引用元素名",
-                    },
-                  ],
-                },
-                {
-                  kind: "text",
-                  body:
-                    "UI 自动化的第一版是把选择器写死在脚本里，页面一改要挨个找。现在拆成两层：元素库存「怎么找到它」，脚本只存「先点谁再点谁」。定位策略做成可配置的 12 种（CSS / XPath / text / role / test-id …），换页面时改元素库就够了。",
-                },
-                {
-                  kind: "figures",
-                  items: [
-                    {
-                      src: "works/testhub/data-factory.webp",
-                      caption: "数据工厂：51 个工具按场景分类，生成的数据打上标签后可在接口与 UI 测试里直接引用",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              id: "hard",
-              kicker: "HARD PARTS",
-              title: "本地跑起来踩的坑",
-              blocks: [
-                {
-                  kind: "points",
-                  items: [
-                    {
-                      title: "源码没带 migrations",
-                      body: "仓库里只保留了 __init__.py。15 个 app 第一次 makemigrations 时依赖顺序会打架，只能按依赖关系分批生成，再统一 migrate；漏掉一个 app，后面的外键就建不出来。",
-                    },
-                    {
-                      title: "Python 3.13 装了也白装",
-                      body: "本机原本是 3.13，装依赖时几个包还没有对应的 wheel，编译直接失败。换 3.12 建独立虚拟环境才对齐。手册里那句「推荐 3.12」不是建议。",
-                    },
-                    {
-                      title: "本机代理把 127.0.0.1 也代理了",
-                      body: "环境里留着 HTTP_PROXY，requests 访问本地 8000 也会被改写，表现是接口莫名其妙 404。给本地脚本加 NO_PROXY=127.0.0.1,localhost 才通，浏览器访问反倒不受影响。",
-                    },
-                    {
-                      title: "父路由缺默认子路由就白屏",
-                      body: "直接输 /configuration 进来的是一张白纸 —— 父路由没有配重定向，点菜单进去却是好的。补一条重定向到 /configuration/ai-model 才对。这种只在手输地址时出现的 bug，最容易漏测。",
-                    },
-                    {
-                      title: "AI 能力是开关，不是默认",
-                      body: "没填模型 Key 时，用例生成、AI 智能模式、Dify 评测师都不可用，页面会明确告诉你在等什么。演示时最怕的不是功能少，而是点了没反应。",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              id: "outcome",
-              kicker: "OUTCOME",
-              title: "做到哪一步了",
-              blocks: [
-                {
-                  kind: "text",
-                  body:
-                    "本地这条链路是通的：15 个应用的迁移全部完成，114 张表建好，接口层冒烟 14 项全过（登录、建项目、建用例、发接口请求、数据工厂工具、环境检测），页面层遍历 17 个页面无 console 错误、无失败请求。",
-                },
-                {
-                  kind: "figures",
-                  items: [
-                    {
-                      src: "works/testhub/report.webp",
-                      caption: "测试报告：通过率、执行趋势、失败用例 TOP 都从执行记录里算出来，不用手工填表",
-                    },
-                  ],
-                },
-                {
-                  kind: "points",
-                  items: [
-                    {
-                      title: "现在能完整走一遍",
-                      body: "建项目 → 写用例 → 评审 → 排测试计划 → 执行 → 看报告；接口测试能真实发请求并留历史；UI 自动化能管元素、编脚本、按套件跑；数据工厂 51 个工具可用。",
-                    },
-                    {
-                      title: "还差的部分",
-                      body: "AI 用例生成、AI 智能模式、Dify 评测师要填模型 Key 才能开；APP 自动化要装 airtest 与 opencv（带 PyTorch，约 3GB）和 Redis；Allure 报告要单独装命令行。",
-                    },
-                    {
-                      title: "为什么不给线上地址",
-                      body: "它依赖 MySQL、Redis、浏览器驱动和模型额度，扔到公网既跑不动也不安全。所以作品页只放本地实跑的截图，源码放在私有仓库。",
+                      body: "字符、编码、随机、加密、测试数据、JSON、Crontab 七类工具，入参出参都是 JSON，结果落库并打标签。接口的请求参数、UI 的输入步骤可以直接引用带标签的数据，不用手工复制。",
                     },
                   ],
                 },
@@ -522,19 +513,8 @@ export const WORK_CATEGORIES: WorkCategory[] = [
             },
           ],
           note:
-            "当前只有本地部署，没有线上地址。截图全部来自本机实跑（MySQL 8 + Django 8000 + Vite 3000），演示数据是为截图准备的一份样例项目。源码在私有仓库 blue-riband-x/testhub-platform，暂不公开。",
+            "截图是本机跑起来之后截的（MySQL 8 + Django 8000 + Vite 3000）。页面里那批数据是「在线商城 V2.0」的演示样例，用来把每个页面填满，不是真实项目记录。后端源码在私有仓库 blue-riband-x/testhub-platform。",
         },
-      },
-      {
-        id: "innofact",
-        title: "创星工厂",
-        summary: "大学生一站式创业孵化小程序 · 多智能体 AI 导师",
-        hue: 145,
-        meta: "2026 · 微信小程序 · FastAPI + LangGraph",
-        description:
-          "面向大学生的一站式创业孵化平台，把「有个想法」到「组起队伍」之间那几步拆成了可执行的功能。\n\n" +
-          "平台里有五个模块：AI 导师、AI 大纲、AI 润色、团队组建、工作空间。导师不是单个模型在答题，而是一组分工不同的智能体 —— 导师负责把问题问清楚，考官负责挑刺，助手负责整理成能落地的条目，最后由主流程串成一份可执行的计划。\n\n" +
-          "后端用 FastAPI + LangGraph 编排多智能体，对话通过 SSE 流式推回前端；结构化数据存 MySQL，历史对话的向量索引放 Chroma，检索时按用户自己的项目空间做隔离。",
       },
       {
         id: "virtual-classroom",
@@ -895,6 +875,17 @@ export const WORK_CATEGORIES: WorkCategory[] = [
             },
           ],
         },
+      },
+      {
+        id: "innofact",
+        title: "创星工厂",
+        summary: "大学生一站式创业孵化小程序 · 多智能体 AI 导师",
+        hue: 145,
+        meta: "2026 · 微信小程序 · FastAPI + LangGraph",
+        description:
+          "面向大学生的一站式创业孵化平台，把「有个想法」到「组起队伍」之间那几步拆成了可执行的功能。\n\n" +
+          "平台里有五个模块：AI 导师、AI 大纲、AI 润色、团队组建、工作空间。导师不是单个模型在答题，而是一组分工不同的智能体 —— 导师负责把问题问清楚，考官负责挑刺，助手负责整理成能落地的条目，最后由主流程串成一份可执行的计划。\n\n" +
+          "后端用 FastAPI + LangGraph 编排多智能体，对话通过 SSE 流式推回前端；结构化数据存 MySQL，历史对话的向量索引放 Chroma，检索时按用户自己的项目空间做隔离。",
       },
     ],
   },
