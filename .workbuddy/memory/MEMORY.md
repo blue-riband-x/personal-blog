@@ -16,6 +16,13 @@
 - 组件化优先、不留死代码；页面只做「取数据 + 组合 + 状态」，UI 进 `components/`；文案改 `lib/site.ts`。
 - 文章 `src/content/posts/*.md`，文件名 = slug，frontmatter `title/date/description/tags/cover`；
   **不要 gray-matter**（依赖 Buffer），解析器在 `lib/posts.ts`；正文样式是 `index.css` 的 `.prose-blog`。
+- **写文章别套模板**：用户明确反感「一、二、三…」编号标题 + 每节一张表 + 统一「小结」的骨架
+  （about-rag / langchain-guide 都是这个毛病）。改用短句小标题、一个具体场景贯穿、
+  只在真要并列时才用列表/表格，结尾不要固定套路。
+- Markdown **连续几行会被合并成一段**：中文要点要么空行分段，要么写 `- **X**：…` 列表，
+  别用软换行连排（踩过：四行动作渲染成一坨）。
+- 封面图：`public/covers/`（随 Pages 发布）或 OSS 外链二选一，`asset()` 对外链原样返回。
+  要精确控制中文排版就用 HTML+SVG 写好再用 Playwright 截图（1600×1000），比生图可控、无乱码。
 - 字体自托管：`sora-latin-var.woff2`（33KB，300–700）+ `zpix-pixel.woff2`（153KB，GB2312 一级子集，
   加字要重跑 fonttools）；别引 Google Fonts（跨域 + 渲染阻塞）。
 - 没装图标库：手写内联 SVG 或 `PixelIcon` 字符网格（`crispEdges`），别引 `lucide-react`。
