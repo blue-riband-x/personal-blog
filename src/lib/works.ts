@@ -1074,10 +1074,54 @@ export const WORK_CATEGORIES: WorkCategory[] = [
             "游戏托管在 GitHub Pages（仓库 blue-riband-x/neon-street-breaker），用的是 Godot 4.7 的 Web 导出。首屏需要下载约 10MB 的 wasm 与 17MB 的资源包，国内网络首次打开要等几秒；之后浏览器有缓存。手机建议横屏，触屏虚拟按键可以在设置里开关。",
         },
       },
-      { id: "g2", title: "星尘跳跃", summary: "重力反转的平台跳跃", hue: 210 },
-      { id: "g3", title: "方块农场", summary: "放置类种田小游戏", hue: 95 },
-      { id: "g4", title: "霓虹赛车", summary: "伪 3D 竞速", hue: 285 },
-      { id: "g5", title: "地牢探险", summary: "程序化地牢生成", hue: 25 },
+      {
+        id: "exo-defense",
+        title: "EXO 深空防线",
+        summary: "太空塔防 · 在轨道上建防线扛波次",
+        cover: "works/mini-games/exo.webp",
+        hue: 190,
+        meta: "2026 · Canvas 2D · 20 个源码文件",
+        link: "https://blue-riband-x.github.io/mini-games/tower-defense/",
+        description:
+          "把塔防搬到太空轨道上：母星在正中，敌人从环外压进来，你要在轨道上架炮塔、铺激光、插减速场，撑过一波比一波密的进攻。\n\n" +
+          "资源只有矿物和能量两种 —— 建塔花矿物、开火吃能量，所以「先扩产还是先加火力」是每局都要重做一次的取舍。整个游戏没有一张图片文件：飞船、炮塔、爆炸全是运行时逐像素画出来的，所以 156 KB 里塞完了全部美术和音效。",
+      },
+      {
+        id: "space-huggers",
+        title: "Space Huggers",
+        summary: "横版跑打 · 地形炸得开 · 死一次地图重排",
+        cover: "works/mini-games/space-huggers.webp",
+        hue: 42,
+        meta: "2026 · LittleJS 引擎 · 逐格可破坏地形",
+        link: "https://blue-riband-x.github.io/mini-games/space-huggers/index.html",
+        description:
+          "横版跑打：左右移动、跳、开火，一路往右推。地形是逐格算的，墙被打穿后能直接钻进敌人背后，也会被敌人从侧面掏出来打你。\n\n" +
+          "九条命、四波杂兵和一个会追着你跑的关底；每次重开地图重新生成，同一套走位用不了第二遍。手感调得很实 —— 命中顿帧、镜头轻微抖动、音效即时合成，压缩到 13 KB 的参赛体量里还留着完整的音画反馈。",
+      },
+      {
+        id: "boulder-dash",
+        title: "Boulder Dash",
+        summary: "挖宝石、推石头、躲落石",
+        cover: "works/mini-games/boulder-dash.webp",
+        hue: 28,
+        meta: "2026 · Canvas 瓷砖渲染 · 关卡制",
+        link: "https://blue-riband-x.github.io/mini-games/boulder-dash/index.html",
+        description:
+          "1984 年那款 Boulder Dash 的网页重制：挖开泥土找钻石，攒够数量才能开出口，全程限时。\n\n" +
+          "麻烦在石头 —— 它能被推着走，但下面一空就会砸下来；砸在头上直接没命，砸在怪物身上反倒帮你清场。所以每一铲都得先算落点：是挖出一条安全通道，还是故意让石头滚下去当武器。",
+      },
+      {
+        id: "project-sand",
+        title: "Project Sand",
+        summary: "落沙沙盒 · 二十多种元素互相反应",
+        cover: "works/mini-games/project-sand.webp",
+        hue: 265,
+        meta: "2026 · Canvas 像素模拟 · 无输赢",
+        link: "https://blue-riband-x.github.io/mini-games/project-sand/index.html",
+        description:
+          "没有输赢的沙盒：鼠标当画笔，画什么就有什么。沙会堆成坡、水会找平、油浮在水上、火顺着油烧过去、酸把挡路的东西化掉。\n\n" +
+          "每个格子只按自己的规则和邻居算下一步，规则简单，叠起来却能出连锁 —— 一桶水倒进火里会腾起蒸汽，蒸汽冷却又落回水。适合没事的时候瞎画，也适合专门给它设个局，看会不会按你想的走。",
+      },
       { id: "g6", title: "弹球实验室", summary: "物理弹球沙盒", hue: 190 },
     ],
   },
