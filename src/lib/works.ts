@@ -178,6 +178,354 @@ export const WORK_CATEGORIES: WorkCategory[] = [
     columns: 2,
     items: [
       {
+        id: "testhub",
+        title: "TestHub 测试平台",
+        summary: "AI 需求分析 + 用例评审 + 接口/UI/APP 自动化的一站式测试平台",
+        cover: "works/testhub/hero.webp",
+        hue: 210,
+        meta: "2026 · Django 4.2 + Vue 3 · 15 个应用 / 114 张表",
+        description:
+          "把散在 Excel、Postman、Selenium 脚本和 Allure 报告里的测试工作收进同一条流水线：需求文档进来，AI 拆出业务需求并生成用例，人评审通过后排进测试计划、执行、出报告。\n\n" +
+          "后端 Django + DRF，15 个业务应用、114 张表；前端 Vue 3 + Element Plus。接口测试能真实发请求并留历史，UI 自动化支持 Selenium / Playwright 双引擎与 browser-use 的 AI 智能模式，APP 走 Airtest。",
+        caseStudy: {
+          lede: "测试的麻烦不在某一步，而在步与步之间。这个平台把需求、用例、评审、执行、报告放进同一个库，让一条用例能从需求一路走到报告。",
+          role: "独立开发 · 后端模型与接口 / 前端工作台 / 执行引擎接入",
+          period: "2026 · 个人项目 / 本地部署",
+          facts: [
+            { value: "15", label: "Django 应用" },
+            { value: "4.6 万", label: "行后端代码" },
+            { value: "114", label: "张数据表" },
+            { value: "51", label: "测试工具" },
+          ],
+          stack: [
+            "Python 3.12",
+            "Django 4.2",
+            "DRF",
+            "MySQL 8",
+            "SimpleJWT",
+            "Celery",
+            "APScheduler",
+            "Vue 3",
+            "Vite",
+            "Element Plus",
+            "Pinia",
+            "ECharts",
+            "Monaco Editor",
+            "Playwright",
+            "Selenium",
+            "Airtest",
+            "browser-use",
+            "Allure",
+          ],
+          hero: {
+            src: "works/testhub/hero.webp",
+            caption: "工作台：八个入口对应需求、用例、接口、UI、APP、AI 智能模式与配置中心",
+          },
+          sections: [
+            {
+              id: "brief",
+              kicker: "THE PROBLEM",
+              title: "想解决的问题",
+              blocks: [
+                {
+                  kind: "text",
+                  body:
+                    "做的第一版只有「用例管理」—— 建项目、写用例、导出 Excel。真正用起来才发现，痛点根本不在写用例这件事上：需求在文档里，用例在表格里，接口调试在另一个工具里，UI 脚本散在几个人本地，最后报告还得手工截图整理。\n\n" +
+                    "所以第二版把链路补完整了：需求文档上传 → AI 拆出业务需求与功能点 → 生成带前置条件、步骤、预期结果的用例 → 评审 → 挂进测试计划 → 执行 → 统计进报告。每一环都落在同一个库里，用例只有一份，不是每个模块各存一个副本。",
+                },
+                {
+                  kind: "points",
+                  items: [
+                    {
+                      title: "AI 只掐最费人的那一段",
+                      body: "没给全流程套聊天框。模型只做一件事：把需求文档读成结构化的功能点，再按功能点写出用例草稿。生成完必须过人评审才能进计划 —— 人始终在环里，而不是让模型直接决定测什么。",
+                    },
+                    {
+                      title: "接口、UI、APP 都是「可执行单元」",
+                      body: "三种自动化在系统里是同一种东西的不同驱动：都产出执行记录、都能挂定时任务、都写 Allure。所以报告页不需要为每个引擎单独做一套统计。",
+                    },
+                    {
+                      title: "配置是前置条件，不是隐藏开关",
+                      body: "没配模型 Key 时，用例生成页会先弹一张检查表：模型、提示词、生成行为三项缺一项就不放行，点「去配置」直接跳过去。比让人点进去等一个报错要好。",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "design",
+              kicker: "TRADE-OFFS",
+              title: "技术选型：为什么是这套",
+              blocks: [
+                {
+                  kind: "text",
+                  body:
+                    "所有选择都围绕一个前提：这套东西要在一台机器上跑起来，还要能被一个人维护。",
+                },
+                {
+                  kind: "choices",
+                  items: [
+                    {
+                      pick: "Django + DRF 单后端",
+                      why: "15 个业务域正好对上 Django 的 app 结构：用户、项目、用例、评审、执行、报告、数据工厂各占一个 app，模型、迁移、Admin、权限都是现成的；DRF 负责序列化，drf-spectacular 直接把 Swagger 和 ReDoc 生成出来。",
+                      alt: "全 Node：接口与 UI 自动化要驱动浏览器和 ADB，Playwright、Airtest、browser-use 的生态都在 Python 这边，硬换等于给每个引擎包一层服务。",
+                    },
+                    {
+                      pick: "Vue 3 + Element Plus",
+                      why: "后台系统的工作量集中在表格、表单、树、弹窗，Element Plus 把这部分铺得很快；Monaco 接进来就是脚本编辑器，ECharts 接进来就是报告图表。",
+                      alt: "React + Antd：生态一样成熟，但这个项目大量树形结构（项目 / 集合 / 元素分组），Element 的默认交互更接近国内后台的使用习惯。",
+                    },
+                    {
+                      pick: "JWT 双 Token + 黑名单",
+                      why: "access 30 分钟、refresh 7 天，刷新时轮换并把旧的 refresh 拉黑；前端在 access 过期前 5 分钟自动续期，续期期间的请求进队列等着，不丢请求也不弹登录框。",
+                      alt: "Session：多端登录和脚本化调用（CI 里跑套件）都要额外处理，JWT 天然适合这种「后端只验签」的场景。",
+                    },
+                    {
+                      pick: "browser-use 做 AI 智能模式",
+                      why: "元素定位的脚本是「选择器 + 步骤」，页面一改就废。AI 智能模式换了思路：给目标和页面，让模型自己决定点哪里。文本模式走 DOM 解析，视觉模式走截图识别。",
+                      alt: "继续堆元素库：稳，但维护成本随页面变化线性增长，而且换个人接手就看不懂脚本在干什么。",
+                    },
+                    {
+                      pick: "Allure 出报告",
+                      why: "自己画一套报告不值当，测试岗位认的就是 Allure 的形态：用例级明细、失败堆栈、附件截图。pytest 侧产出 results 目录，后端转成静态站点挂出来。代价是机器上得有 Java。",
+                      alt: "自己写统计页：图表能画，但历史趋势、用例级明细、附件这些全得自己补。",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "arch",
+              kicker: "ARCHITECTURE",
+              title: "系统怎么连起来",
+              blocks: [
+                {
+                  kind: "arch",
+                  caption: "五层结构：前端只调一套 REST，执行层按引擎分派，外部模型和通知都是可选件",
+                  tiers: [
+                    {
+                      label: "前端",
+                      nodes: [
+                        { name: "Vue 3 SPA", note: "Router + Pinia" },
+                        { name: "用例工作台", note: "用例 / 评审 / 计划" },
+                        { name: "接口测试台", note: "集合 / 请求 / 断言" },
+                        { name: "UI · APP 编排", note: "元素 / 脚本 / 套件" },
+                        { name: "配置中心", note: "模型 / 环境 / 通知" },
+                      ],
+                    },
+                    {
+                      label: "API 层",
+                      nodes: [
+                        { name: "DRF 视图", note: "序列化 + 权限" },
+                        { name: "JWT 认证", note: "双 Token + 黑名单" },
+                        { name: "Swagger", note: "drf-spectacular" },
+                      ],
+                    },
+                    {
+                      label: "执行层",
+                      nodes: [
+                        { name: "Selenium", note: "Web 自动化" },
+                        { name: "Playwright", note: "Web 自动化" },
+                        { name: "Airtest", note: "Android" },
+                        { name: "browser-use", note: "AI 智能模式" },
+                        { name: "Celery", note: "异步任务" },
+                        { name: "APScheduler", note: "定时调度" },
+                      ],
+                    },
+                    {
+                      label: "数据层",
+                      nodes: [
+                        { name: "MySQL 8", note: "114 张表" },
+                        { name: "media", note: "截图 / 录屏 / 上传" },
+                        { name: "Allure", note: "执行报告" },
+                      ],
+                    },
+                    {
+                      label: "外部能力",
+                      nodes: [
+                        { name: "DeepSeek", note: "需求分析 / 用例" },
+                        { name: "通义 · 硅基流动", note: "备选模型" },
+                        { name: "Dify", note: "AI 评测师" },
+                        { name: "企微 · 钉钉", note: "Webhook 通知" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  kind: "code",
+                  title: "backend/settings.py —— 双 Token 的几条关键配置",
+                  body:
+                    "SIMPLE_JWT = {\n" +
+                    "    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),\n" +
+                    "    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),\n" +
+                    "    'ROTATE_REFRESH_TOKENS': True,     # 每次刷新都换一个新的 refresh\n" +
+                    "    'BLACKLIST_AFTER_ROTATION': True,  # 旧的进黑名单，防重放\n" +
+                    "    'UPDATE_LAST_LOGIN': True,\n" +
+                    "    'ALGORITHM': 'HS256',\n" +
+                    "    'AUTH_HEADER_TYPES': ('Bearer',),\n" +
+                    "}\n",
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/cases.webp",
+                      caption: "测试用例：一个项目下按版本、优先级、类型筛选，右侧直接改状态或删除，用例只有这一份",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "impl",
+              kicker: "IMPLEMENTATION",
+              title: "关键实现",
+              blocks: [
+                {
+                  kind: "points",
+                  items: [
+                    {
+                      title: "前端无感续期：请求排队而不是踢人",
+                      body: "请求拦截器先算 access 还剩多久，只剩 5 分钟就用 refresh 换新的；同时把后续请求压进队列，等刷新完成再统一放出去。只有刷新本身失败才登出 —— 一个 401 就把人踢下线，是后台系统最招骂的交互。",
+                    },
+                    {
+                      title: "APP 自动化用 JSON 编排流程",
+                      body: "Airtest 的动作被抽成 UI Flow：每一步是 {动作, 目标, 参数}，覆盖十多种操作；变量分 global / local / outputs 三个作用域，步骤之间用 {{variable}} 引用。组件可以打包导出，换个项目导入就能用。",
+                    },
+                    {
+                      title: "51 个工具走同一个执行入口",
+                      body: "字符、编码、随机、加密、测试数据、JSON、Crontab 七类工具，入参出参都是 JSON，结果落库并打标签。接口测试的请求参数、UI 测试的输入步骤可以直接引用带标签的数据，不用手工复制粘贴。",
+                    },
+                    {
+                      title: "评审意见能落到步骤级",
+                      body: "整体意见、用例意见、步骤意见三层都能提，配检查清单和评审模板；状态从待评审到评审中再到通过 / 拒绝。意见挂在原用例上，不做副本，改一次只改一处。",
+                    },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/review.webp",
+                      caption: "用例评审：评审进度、评审人与待评审数量一屏看完，意见按用例和步骤分层挂",
+                    },
+                  ],
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/api-history.webp",
+                      caption: "请求历史：每次执行的请求、状态码、响应时间都留档，失败的那条能直接重发",
+                    },
+                  ],
+                },
+                {
+                  kind: "text",
+                  body:
+                    "接口测试没有另做一套「发送器」，而是复用同一份请求模型：集合是树，请求是叶子，环境变量用 {{}} 占位，执行结果写请求历史。好处是断言、前置脚本、后置脚本都只有一处实现，坏处是早期的数据结构定得太宽松（headers 和 body 都是 JSONField），后面加字段时得靠约定而不是约束。",
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/elements.webp",
+                      caption: "元素管理：一个元素绑定定位策略、所属页面与等待超时，UI 脚本只引用元素名",
+                    },
+                  ],
+                },
+                {
+                  kind: "text",
+                  body:
+                    "UI 自动化的第一版是把选择器写死在脚本里，页面一改要挨个找。现在拆成两层：元素库存「怎么找到它」，脚本只存「先点谁再点谁」。定位策略做成可配置的 12 种（CSS / XPath / text / role / test-id …），换页面时改元素库就够了。",
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/data-factory.webp",
+                      caption: "数据工厂：51 个工具按场景分类，生成的数据打上标签后可在接口与 UI 测试里直接引用",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "hard",
+              kicker: "HARD PARTS",
+              title: "本地跑起来踩的坑",
+              blocks: [
+                {
+                  kind: "points",
+                  items: [
+                    {
+                      title: "源码没带 migrations",
+                      body: "仓库里只保留了 __init__.py。15 个 app 第一次 makemigrations 时依赖顺序会打架，只能按依赖关系分批生成，再统一 migrate；漏掉一个 app，后面的外键就建不出来。",
+                    },
+                    {
+                      title: "Python 3.13 装了也白装",
+                      body: "本机原本是 3.13，装依赖时几个包还没有对应的 wheel，编译直接失败。换 3.12 建独立虚拟环境才对齐。手册里那句「推荐 3.12」不是建议。",
+                    },
+                    {
+                      title: "本机代理把 127.0.0.1 也代理了",
+                      body: "环境里留着 HTTP_PROXY，requests 访问本地 8000 也会被改写，表现是接口莫名其妙 404。给本地脚本加 NO_PROXY=127.0.0.1,localhost 才通，浏览器访问反倒不受影响。",
+                    },
+                    {
+                      title: "父路由缺默认子路由就白屏",
+                      body: "直接输 /configuration 进来的是一张白纸 —— 父路由没有配重定向，点菜单进去却是好的。补一条重定向到 /configuration/ai-model 才对。这种只在手输地址时出现的 bug，最容易漏测。",
+                    },
+                    {
+                      title: "AI 能力是开关，不是默认",
+                      body: "没填模型 Key 时，用例生成、AI 智能模式、Dify 评测师都不可用，页面会明确告诉你在等什么。演示时最怕的不是功能少，而是点了没反应。",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: "outcome",
+              kicker: "OUTCOME",
+              title: "做到哪一步了",
+              blocks: [
+                {
+                  kind: "text",
+                  body:
+                    "本地这条链路是通的：15 个应用的迁移全部完成，114 张表建好，接口层冒烟 14 项全过（登录、建项目、建用例、发接口请求、数据工厂工具、环境检测），页面层遍历 17 个页面无 console 错误、无失败请求。",
+                },
+                {
+                  kind: "figures",
+                  items: [
+                    {
+                      src: "works/testhub/report.webp",
+                      caption: "测试报告：通过率、执行趋势、失败用例 TOP 都从执行记录里算出来，不用手工填表",
+                    },
+                  ],
+                },
+                {
+                  kind: "points",
+                  items: [
+                    {
+                      title: "现在能完整走一遍",
+                      body: "建项目 → 写用例 → 评审 → 排测试计划 → 执行 → 看报告；接口测试能真实发请求并留历史；UI 自动化能管元素、编脚本、按套件跑；数据工厂 51 个工具可用。",
+                    },
+                    {
+                      title: "还差的部分",
+                      body: "AI 用例生成、AI 智能模式、Dify 评测师要填模型 Key 才能开；APP 自动化要装 airtest 与 opencv（带 PyTorch，约 3GB）和 Redis；Allure 报告要单独装命令行。",
+                    },
+                    {
+                      title: "为什么不给线上地址",
+                      body: "它依赖 MySQL、Redis、浏览器驱动和模型额度，扔到公网既跑不动也不安全。所以作品页只放本地实跑的截图，源码放在私有仓库。",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          note:
+            "当前只有本地部署，没有线上地址。截图全部来自本机实跑（MySQL 8 + Django 8000 + Vite 3000），演示数据是为截图准备的一份样例项目。源码在私有仓库 blue-riband-x/testhub-platform，暂不公开。",
+        },
+      },
+      {
         id: "innofact",
         title: "创星工厂",
         summary: "大学生一站式创业孵化小程序 · 多智能体 AI 导师",
