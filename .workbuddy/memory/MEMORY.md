@@ -152,6 +152,12 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
   （默认分支 **master**，与 Gitee 共用一条历史，推 GitHub 用 `git push github master`）。
   作品档案里用 `link` + `linkLabel: "查看源码"` 指向它；`model_3D/`、`backend/static/boards/`（7MB 产物）、
   日志、`.env` 都在 `.gitignore` 里，仓库只有源码 + 3 张 README 截图（~190KB）。
+- 小游戏合集 `blue-riband-x/mini-games` → https://blue-riband-x.github.io/mini-games/
+  一个仓库装四个开源小游戏（td13k 太空塔防 / Space Huggers / Boulder Dash / Project Sand），
+  根 `index.html` 是入口页，Pages 走 legacy + `main` 根目录。**改署名只改游戏内可见处**
+  （标题画面、`meta author`、`app*.js` 文件头），`LICENSE`、`AUTHORS`、引擎目录、README 的「原作」
+  一行必须留，`THIRD-PARTY.md` 逐项写来源与改动 —— MIT/GPL 都要求保留原点。
+  塔防用 `src/` 未压缩源码发布（原来的 Closure 单文件改不了署名，字符串被编码）。
 - 音乐盒子 `blue-riband-x/music-play` → https://blue-riband-x.github.io/music-play/
 - 击穿霓虹街头（Godot 4.7 像素清版）`blue-riband-x/neon-street-breaker`
   → https://blue-riband-x.github.io/neon-street-breaker/ ；源码本机 `D:\coding\battle`，
