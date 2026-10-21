@@ -10,6 +10,8 @@
 - 路由懒加载（`App.tsx` 的 `React.lazy`）：全静态 import 会让首屏连带解析 `react-markdown` + Spline，
   JS 从 95KB 涨到 171KB(gzip)。
 - 文档：`README.md` 是项目介绍（页面 / 作品页 / 部署 / 取舍），`TODO.md` 只放待办。
+- **线上核验**：文章正文单独打成 `assets/posts-<hash>.js`（`import.meta.glob`），搜标题要搜这个 chunk，
+  别搜 `index-*.js`；`/blog/<slug>` 返回 404 是 Pages 用 `404.html` 兜底的正常现象，浏览器里照常渲染。
 
 ## 编码约定
 
