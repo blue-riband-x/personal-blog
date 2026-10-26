@@ -150,6 +150,16 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
 - 仓库 About 已补：中文简介 + homepage + topics（blog / portfolio / react / typescript / vite /
   tailwindcss / personal-website）。
 
+## 游戏玩具（works.ts 的 game 分类）
+
+顺序：音乐盒子 → 击穿霓虹街头 → **猫咪合成** → EXO 深空防线 → Space Huggers → Boulder Dash
+（第二页还挂着占位项「弹球实验室」）。猫咪合成的条目没有 `caseStudy`，走 `WorkDetail` 浮层，
+`link` 指向 `mini-games/cat-merge/`，封面 `works/mini-games/cat-merge.webp`（1400×875 / 65KB）。
+
+- **猫咪合成的源码不在 mini-games 仓库里**：`D:/coding/games-src/cat-merge`（Vite + React + Phaser），
+  只有构建产物同步进 `mini-games/cat-merge/`。重新发布见 `2026-10-26.md`（`MSYS_NO_PATHCONV=1` + `BASE_PATH`）。
+- 猫图版权不在 MIT 范围内，`THIRD-PARTY.md` 里单独写了这条说明。
+
 ## 关联作品（不在本仓库）
 
 - **TestHub 测试平台**（`D:\code\AITestPlatform\Ai_Testhub`）：Django 4.2 + Vue 3 的测试管理平台，
@@ -162,11 +172,12 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
   作品档案里用 `link` + `linkLabel: "查看源码"` 指向它；`model_3D/`、`backend/static/boards/`（7MB 产物）、
   日志、`.env` 都在 `.gitignore` 里，仓库只有源码 + 3 张 README 截图（~190KB）。
 - 小游戏合集 `blue-riband-x/mini-games` → https://blue-riband-x.github.io/mini-games/
-  一个仓库装四个开源小游戏（td13k 太空塔防 / Space Huggers / Boulder Dash / Project Sand），
+  一个仓库装五个开源小游戏（td13k 太空塔防 / Space Huggers / Boulder Dash / **猫咪合成 Cat Merge**），
   根 `index.html` 是入口页，Pages 走 legacy + `main` 根目录。**改署名只改游戏内可见处**
   （标题画面、`meta author`、`app*.js` 文件头），`LICENSE`、`AUTHORS`、引擎目录、README 的「原作」
   一行必须留，`THIRD-PARTY.md` 逐项写来源与改动 —— MIT/GPL 都要求保留原点。
   塔防用 `src/` 未压缩源码发布（原来的 Closure 单文件改不了署名，字符串被编码）。
+  Project Sand 已在 2026-10-26 被猫咪合成替换（源码目录仍留在仓库里，入口页不再列）。
 - 音乐盒子 `blue-riband-x/music-play` → https://blue-riband-x.github.io/music-play/
 - 击穿霓虹街头（Godot 4.7 像素清版）`blue-riband-x/neon-street-breaker`
   → https://blue-riband-x.github.io/neon-street-breaker/ ；源码本机 `D:\coding\battle`，
