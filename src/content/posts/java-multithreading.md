@@ -1,6 +1,6 @@
 ---
 title: 从一次 count++ 说清楚 Java 多线程
-date: 2026-10-24
+date: 2026-06-02
 description: 一个怎么看都不会错的计数器，1000 个线程各加 1，最后得到 987。顺着这个数字往下挖，原子性、可见性、有序性、锁、线程池和死锁，其实是同一条线上的事。
 tags: [Java, 多线程, 并发]
 cover: covers/java-threads.png
