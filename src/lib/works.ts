@@ -1122,7 +1122,18 @@ export const WORK_CATEGORIES: WorkCategory[] = [
           "1984 年那款 Boulder Dash 的网页重制：挖开泥土找钻石，攒够数量才能开出口，全程限时。\n\n" +
           "麻烦在石头 —— 它能被推着走，但下面一空就会砸下来；砸在头上直接没命，砸在怪物身上反倒帮你清场。所以每一铲都得先算落点：是挖出一条安全通道，还是故意让石头滚下去当武器。",
       },
-      { id: "g6", title: "弹球实验室", summary: "物理弹球沙盒", hue: 190 },
+      {
+        id: "project-sand",
+        title: "沙盒魔法",
+        summary: "落沙沙盒 · 二十多种元素互相反应",
+        cover: "works/mini-games/project-sand.webp",
+        hue: 265,
+        meta: "2026 · Canvas 像素模拟 · 无输赢",
+        link: "https://blue-riband-x.github.io/mini-games/project-sand/index.html",
+        description:
+          "没有输赢的沙盒：鼠标当画笔，画什么就有什么。沙会堆成坡、水会找平、油浮在水上、火顺着油烧过去、酸把挡路的东西化掉。\n\n" +
+          "每个格子只按自己的规则和邻居算下一步，规则简单，叠起来却能出连锁 —— 一桶水倒进火里会腾起蒸汽，蒸汽冷却又落回水。适合没事的时候瞎画，也适合专门给它设个局，看会不会按你想的走。",
+      },
     ],
   },
   {
