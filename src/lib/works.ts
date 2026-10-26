@@ -1075,6 +1075,18 @@ export const WORK_CATEGORIES: WorkCategory[] = [
         },
       },
       {
+        id: "cat-merge",
+        title: "猫咪合成",
+        summary: "丢猫合成 · 十级图鉴 · 物理堆叠",
+        cover: "works/mini-games/cat-merge.webp",
+        hue: 265,
+        meta: "2026 · Phaser 3 + Matter.js · 十级合成",
+        link: "https://blue-riband-x.github.io/mini-games/cat-merge/",
+        description:
+          "把猫丢下去，两只一样的碰到一起就合成更大的一只，从小小一只一路合到第十级的「喵陛下」。堆过虚线就结束 —— 要想的是「这一只该放哪」，不是「快点合」。\n\n" +
+          "物理是 Phaser 自带的 Matter.js：猫是圆的，会滚、会滑，会卡在两只大猫中间的缝里，所以同一个落点前后两次结果不一样。原作是 Next.js 写的，我把它改成 Vite 静态站、十张猫图从 12MB 压到 500KB，再补了中英切换和中文的「怎么玩」。",
+      },
+      {
         id: "exo-defense",
         title: "EXO 深空防线",
         summary: "太空塔防 · 在轨道上建防线扛波次",
@@ -1109,18 +1121,6 @@ export const WORK_CATEGORIES: WorkCategory[] = [
         description:
           "1984 年那款 Boulder Dash 的网页重制：挖开泥土找钻石，攒够数量才能开出口，全程限时。\n\n" +
           "麻烦在石头 —— 它能被推着走，但下面一空就会砸下来；砸在头上直接没命，砸在怪物身上反倒帮你清场。所以每一铲都得先算落点：是挖出一条安全通道，还是故意让石头滚下去当武器。",
-      },
-      {
-        id: "project-sand",
-        title: "Project Sand",
-        summary: "落沙沙盒 · 二十多种元素互相反应",
-        cover: "works/mini-games/project-sand.webp",
-        hue: 265,
-        meta: "2026 · Canvas 像素模拟 · 无输赢",
-        link: "https://blue-riband-x.github.io/mini-games/project-sand/index.html",
-        description:
-          "没有输赢的沙盒：鼠标当画笔，画什么就有什么。沙会堆成坡、水会找平、油浮在水上、火顺着油烧过去、酸把挡路的东西化掉。\n\n" +
-          "每个格子只按自己的规则和邻居算下一步，规则简单，叠起来却能出连锁 —— 一桶水倒进火里会腾起蒸汽，蒸汽冷却又落回水。适合没事的时候瞎画，也适合专门给它设个局，看会不会按你想的走。",
       },
       { id: "g6", title: "弹球实验室", summary: "物理弹球沙盒", hue: 190 },
     ],
