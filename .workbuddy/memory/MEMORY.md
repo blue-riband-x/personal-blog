@@ -153,8 +153,14 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
 ## 游戏玩具（works.ts 的 game 分类）
 
 顺序：音乐盒子 → 击穿霓虹街头 → **猫咪合成** → EXO 深空防线 → Space Huggers → Boulder Dash
-（第二页还挂着占位项「弹球实验室」）。猫咪合成的条目没有 `caseStudy`，走 `WorkDetail` 浮层，
-`link` 指向 `mini-games/cat-merge/`，封面 `works/mini-games/cat-merge.webp`（1400×875 / 65KB）。
+→ **沙盒魔法**（7 张，`pageSize: 6`，所以第二页第一张是沙盒魔法；手机 `MOBILE_PAGE_SIZE[3]=4`，
+它在第二页第三张）。猫咪合成与沙盒魔法都没有 `caseStudy`，走 `WorkDetail` 浮层。
+原占位项「弹球实验室」（`id: "g6"`）2026-10-26 **已下线**——用户说的「最后一个项目」指的就是它，
+不是 Project Sand，别再按「第一页最后一张卡」去猜。
+
+- 沙盒魔法 = 原来的 Project Sand，2026-10-26 改名（游戏页 `<title>`/h1/帮助标题、合集入口卡同步改，
+  英文名 Sandbox Magic，`PROJECT SAND` 降为副标保留出处）。封面 `works/mini-games/project-sand.webp`。
+- 猫咪合成封面 `works/mini-games/cat-merge.webp`（1400×875 / 65KB），`link` 指向 `mini-games/cat-merge/`。
 
 - **猫咪合成的源码不在 mini-games 仓库里**：`D:/coding/games-src/cat-merge`（Vite + React + Phaser），
   只有构建产物同步进 `mini-games/cat-merge/`。重新发布见 `2026-10-26.md`（`MSYS_NO_PATHCONV=1` + `BASE_PATH`）。
@@ -172,12 +178,13 @@ Esc 逐层退（先判 `detail` 再关分类），详情 `key={work.id}`。已�
   作品档案里用 `link` + `linkLabel: "查看源码"` 指向它；`model_3D/`、`backend/static/boards/`（7MB 产物）、
   日志、`.env` 都在 `.gitignore` 里，仓库只有源码 + 3 张 README 截图（~190KB）。
 - 小游戏合集 `blue-riband-x/mini-games` → https://blue-riband-x.github.io/mini-games/
-  一个仓库装五个开源小游戏（td13k 太空塔防 / Space Huggers / Boulder Dash / **猫咪合成 Cat Merge**），
+  一个仓库装五个开源小游戏（td13k 太空塔防 / Space Huggers / Boulder Dash / **沙盒魔法 Project Sand** /
+  **猫咪合成 Cat Merge**），
   根 `index.html` 是入口页，Pages 走 legacy + `main` 根目录。**改署名只改游戏内可见处**
   （标题画面、`meta author`、`app*.js` 文件头），`LICENSE`、`AUTHORS`、引擎目录、README 的「原作」
   一行必须留，`THIRD-PARTY.md` 逐项写来源与改动 —— MIT/GPL 都要求保留原点。
   塔防用 `src/` 未压缩源码发布（原来的 Closure 单文件改不了署名，字符串被编码）。
-  Project Sand 已在 2026-10-26 被猫咪合成替换（源码目录仍留在仓库里，入口页不再列）。
+  Project Sand 显示名 2026-10-26 改为「沙盒魔法」（英文 Sandbox Magic），目录仍是 `project-sand/`。
 - 音乐盒子 `blue-riband-x/music-play` → https://blue-riband-x.github.io/music-play/
 - 击穿霓虹街头（Godot 4.7 像素清版）`blue-riband-x/neon-street-breaker`
   → https://blue-riband-x.github.io/neon-street-breaker/ ；源码本机 `D:\coding\battle`，
